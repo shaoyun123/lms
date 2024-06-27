@@ -1,0 +1,111 @@
+#editor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: default;
+  z-index: 2;
+}
+.dropitem {
+  position: absolute;
+  border-color: #000;
+  border-style: solid;
+  border-width: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 12px;
+  text-align: left;
+  font-family: '微软雅黑';
+  /* overflow: hidden; */
+}
+#editor .dropitem .resizers {
+  display: none;
+}
+#editor .dropitem .detail {
+  display: inline-block;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+#editor .dropitem .title {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+#editor .dropitem .detail span {
+  padding-right: 5px;
+}
+#editor .dropitem .detail.block > span {
+  display: block;
+}
+#editor .dropitem > img {
+  max-height: 100%;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.table_content_second .dropitem {
+  top: 5px !important;
+}
+#editor .dropitem table,
+.table_content_second table {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-spacing: 0;
+}
+#editor .dropitem table td img,
+#editor .table_content_second table td img {
+  width: 150px;
+  height: 150px;
+}
+#editor .dropitem table td img,
+.table_content_second table td img {
+  margin-right: 10px;
+}
+#editor .dropitem table.declareSkuType,
+.table_content_second table.declareSkuType {
+  height: 141px;
+}
+
+#editor .dropitem table.no-tdborder td,
+#editor .dropitem table.no-tdborder th,
+.table_content_second table.no-tdborder td,
+.table_content_second table.no-tdborder th {
+  border: 0px;
+}
+#editor .dropitem table th,
+#editor .dropitem table td,
+.table_content_second table th,
+.table_content_second table td {
+  border: 1px solid #000;
+  border-style: solid;
+  border-color: #000;
+  box-sizing: border-box;
+  padding: 0;
+  /* // text-overflow: ellipsis;
+  // white-space: nowrap;
+  // overflow: hidden; */
+}
+.table_content_second {
+  page-break-before: always;
+}
+/* #editor .dropitem table thead th {
+  cursor: e-resize;
+} */
+
+#editor .dropitem.circleText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: #333;
+  border-style: solid;
+  border-radius: 50%;
+}
+
+#editor .dropitem.shapeText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: #333;
+  border-style: solid;
+}

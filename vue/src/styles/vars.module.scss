@@ -1,0 +1,12 @@
+$chat-primary: #d9001b;
+$danger-color: #f56c6c;
+$success-color: #67c23a;
+$warning-color: #e6a23c;
+$primary-color: #409eff;
+:export {
+    chatPrimary: $chat-primary;
+    dangerColor: $danger-color;
+    successColor: $success-color;
+    warningColor: $warning-color;
+    primaryColor: $primary-color;
+}

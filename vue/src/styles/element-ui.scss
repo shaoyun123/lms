@@ -1,0 +1,268 @@
+.app-main {
+  .el-card__header {
+    padding: 8px !important;
+  }
+  // 查询条件 卡片 padding
+  .search_card {
+    .el-card__body {
+      padding: 0 10px !important;
+    }
+  }
+  // 数据列表 卡片 padding
+  .list_card {
+    margin-top: 8px;
+    position: relative;
+    .el-card__body {
+      padding: 8px !important;
+      // 页签高度
+      .el-tabs__header {
+        margin: 0 0 8px;
+        height: 32px;
+      }
+      .el-tabs__nav-scroll {
+        height: 32px;
+      }
+      .el-tabs__item {
+        height: 32px;
+        line-height: 32px;
+      }
+      .common_batch_btns {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+      }
+    }
+  }
+  .el-form--inline .el-form-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  :deep(.el-select-dropdown__item) {
+    font-size: 13px !important;
+  }
+  .vxe-table {
+    .el-button {
+      margin: 2px;
+    }
+    // 列表 行高度
+    .vxe-table--body-wrapper {
+      .vxe-body--column {
+        height: 32px;
+      }
+    }
+    .vxe-cell {
+      color: #000 !important;
+    }
+    // .vxe-table--header-wrapper {
+    //   // height: 32px;
+    //   .vxe-header--column {
+    //     line-height: 18px;
+    //   }
+    // }
+  }
+  // 表单 筛选
+  .search_form {
+    // 查询条件右侧
+    .el-input {
+      width: 120px;
+      // height: 24px;
+    }
+    .el-form-item__content .el-select {
+      width: 120px;
+    }
+    .form_left {
+      width: 100px !important;
+    }
+    // 查询条件左侧
+    .el-form-item .el-form-item__label {
+      width: 100px !important;
+      padding-right: 8px;
+      color: #000;
+    }
+
+    .label-width .el-form-item__label {
+      width: 60px !important;
+      padding-right: 8px;
+      color: #000;
+    }
+    // 左侧为下拉框类型
+    // 去除圆角
+    .form_left {
+      .el-input__wrapper {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: 1px 0 0 0 var(--el-input-border-color) inset,
+          0 1px 0 0 var(--el-input-border-color) inset,
+          0 -1px 0 0 var(--el-input-border-color) inset;
+      }
+      .el-select__wrapper {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: 1px 0 0 0 var(--el-border-color) inset,
+          0 1px 0 0 var(--el-border-color) inset,
+          0 -1px 0 0 var(--el-border-color) inset;
+      }
+    }
+    .form_right {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      .el-input__wrapper {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      .el-select__wrapper {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+    // 数字区间
+    .form_range {
+      .el-input {
+        width: 50px;
+      }
+      .range_left {
+        width: 50px !important;
+        .el-input__wrapper {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          box-shadow: 1px 0 0 0 var(--el-input-border-color) inset,
+            0 1px 0 0 var(--el-input-border-color) inset,
+            0 -1px 0 0 var(--el-input-border-color) inset;
+        }
+      }
+    }
+    .range_link {
+      width: 20px;
+      text-align: center;
+    }
+    .el-date-editor {
+      width: 350px !important;
+      box-sizing: border-box;
+    }
+
+    //级联选择器 多选
+    .search_item_cascader {
+      .el-input {
+        height: 24px;
+      }
+      .el-cascader__tags .el-tag {
+        margin: 0 0 0 5px;
+      }
+      .el-tag--small {
+        padding: 0 2px;
+      }
+      .el-cascader__tags {
+        flex-wrap: nowrap;
+
+        span:first-child {
+          max-width: 40px;
+        }
+        span:last-child {
+          width: 30px;
+        }
+        input {
+          min-width: 10px;
+          height: auto;
+          margin: 0 0 0 4px;
+        }
+        .el-tag--info + input {
+          margin: 0;
+        }
+      }
+    }
+    // 商品资质 下拉框
+    .goods_qualification_left {
+      .el-input {
+        width: 140px !important;
+      }
+    }
+    .goods_qualification_right {
+      .el-input {
+        width: 80px !important;
+      }
+    }
+  }
+}
+.dialog_form {
+  .el-select {
+    width: 200px;
+  }
+}
+.el-select__popper {
+  width: inherit;
+}
+.el-select-dropdown__item {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 20px;
+  font-size: 13px;
+}
+.el-tabs__item {
+  font-size: 13px;
+}
+.el-input__inner,
+.el-form-item__label,
+.vxe-table--render-default.size--mini,
+.el-button--small,
+.el-checkbox.el-checkbox--small .el-checkbox__label,
+.el-dropdown-menu--small .el-dropdown-menu__item,
+.el-text--small,
+.vxe-pager.size--mini {
+  font-size: 13px !important;
+}
+.el-form-item--small,
+.el-font-size-extra--small {
+  --font-size: 13px !important;
+}
+.el-pagination {
+  --el-pagination-font-size-small: 13px !important;
+}
+
+// 分页
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.el-cascader__collapse-tags {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.el-loading-mask {
+  z-index: 5000 !important;
+}
+
+.el-overlay {
+  top: 40px;
+  left: 55px;
+  height: calc(100% - 40px);
+  .el-overlay-dialog {
+    // pointer-events: none;
+  }
+  .el-dialog {
+    // pointer-events: auto;
+    // user-select: auto;
+  }
+}
+.fullDialog {
+  .el-overlay-dialog {
+    top: 40px;
+    left: 58px;
+    // pointer-events: none;
+  }
+}
+// .forceprices-times {
+//   left: 65px !important;
+// }
+.el-picker__popper {
+  // left: 65px !important;
+  z-index: 20131026 !important;
+}
+.el-message {
+  top: 50px !important;
+}
+.messageOverflow .el-message-box__message {
+  max-height: 500px;
+  overflow-y: auto;
+}

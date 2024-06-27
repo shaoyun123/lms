@@ -1,0 +1,72 @@
+// 业务页面几乎都应该在根元素上挂载 class="app-container"，以保持页面美观
+.app-container {
+  padding: 8px;
+}
+//请求loading,默认最高优先级
+.loading-main {
+  z-index: 20991231 !important;
+}
+// 全局公用样式
+.common_split_bottom {
+  margin-bottom: 8px;
+}
+.common_search_width {
+  width: 1248px;
+}
+
+.common_ta_right {
+  text-align: right;
+}
+
+.common_ta_left {
+  text-align: left;
+}
+
+.common_ta_center {
+  text-align: center;
+}
+
+.common_text_gray_500 {
+  --un-text-opacity: 1;
+  color: rgba(107, 114, 128, var(--un-text-opacity));
+}
+.common_width_80 {
+  width: 80px;
+}
+.common_width_100 {
+  width: 100px;
+}
+.common_width_120 {
+  width: 120px;
+}
+.common_height_500 {
+  height: 500px;
+}
+// 子表格展开&显示
+.hideBtn {
+  display: none;
+}
+// 多选option隐藏，数据显示成+1
+.hideTag .el-select-tags-wrapper {
+  display: none !important;
+}
+.vxe-table--render-default.size--mini {
+  z-index: 0;
+}
+/*vxe-table 自定义行高 */
+.vxe-table--render-default.size--mini .vxe-body--column.col--ellipsis > .vxe-cell {
+  max-height: fit-content !important;
+  text-overflow: ellipsis !important;
+  white-space: break-spaces !important;
+}
+.vxe-table--tooltip-wrapper {
+  z-index: 20231010 !important;
+}
+
+.comon_text_overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}

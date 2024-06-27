@@ -1,0 +1,111 @@
+.addon_wrapper {
+  .search_form {
+    :deep(.hide_tag) {
+      .el-select-tags-wrapper {
+        display: none;
+      }
+    }
+    .hide_tag {
+      :deep(.el-select__selected-item) {
+        display: none;
+      }
+    }
+    .search_item_label {
+      :deep(.el-form-item__label) {
+        padding-right: 6px;
+      }
+    }
+    .search_item_cascader {
+      :deep(.el-input) {
+        width: 300px;
+      }
+    }
+  }
+  .list_card {
+    position: relative;
+    .tools_btn {
+      padding: inherit;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+    }
+    .store_tag {
+      margin: 5px 5px 0 0;
+    }
+  }
+  .editdialog_wrapper {
+    :deep(.el-overlay-dialog) {
+      overflow-y: hidden;
+      height: calc(100% - 50px);
+    }
+    :deep(.el-dialog) {
+      height: calc(100% - 50px);
+    }
+    :deep(.el-dialog__body) {
+      overflow-y: scroll;
+      height: calc(100% - 168px);
+    }
+    .editdialog_text_success {
+      color: #67c23a;
+    }
+    .editdialog_addprod {
+      :deep(.el-select) {
+        width: 100px;
+      }
+      :deep(.el-input-number) {
+        width: 100px;
+      }
+      .editdialog_addprod_operate {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .editdialog_addprod_variid {
+        :deep(.el-input) {
+          width: 240px;
+        }
+      }
+    }
+    .editdialog_table {
+      width: 100%;
+      .table_promoInputPrice_header {
+        display: flex;
+        align-items: center;
+        :deep(.el-select) {
+          width: 70px;
+        }
+      }
+      .table_promoInputPrice_cell {
+        :deep(.el-input-number) {
+          width: 180px;
+        }
+      }
+      :deep(.el-input-number) {
+        width: 100px;
+      }
+    }
+  }
+  .ml12 {
+    margin-left: 12px;
+  }
+  .mr12 {
+    margin-right: 12px;
+  }
+  .ml10 {
+    margin-left: 10px;
+  }
+  .ml05 {
+    margin-left: 5px;
+  }
+  .fRed {
+    color: #f56c6c;
+  }
+  .m02 {
+    margin: 0 2px;
+  }
+  .WH55 {
+    width: 57px;
+  }
+}

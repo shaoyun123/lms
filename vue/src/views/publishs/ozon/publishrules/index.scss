@@ -1,0 +1,72 @@
+// .search_rule_name {
+//   :deep(.el-input) {
+//     width: 70px;
+//   }
+// }
+.page-header {
+  position: absolute;
+  z-index: 9;
+  width: calc(100% - 30px);
+}
+.toolbar-btn {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 50%);
+}
+:deep(.common_batch_btns) {
+  top: 5px !important;
+}
+:deep(.vxe-toolbar) {
+  padding: 0 0 0.6em 0;
+}
+.ml12 {
+  margin-left: 12px;
+}
+.ml30 {
+  margin-left: 30px;
+}
+.ml10 {
+  margin-left: 10px;
+}
+
+.disflex {
+  display: flex;
+}
+.store_dialog_wrapper {
+  :deep(.el-cascader) {
+    width: 200px;
+  }
+  :deep(.el-cascader__search-input) {
+    min-width: 20px;
+  }
+  :deep(.col--edit) {
+    background-color: #e6f7ff;
+    background-image: linear-gradient(#e8eaec, #e8eaec), linear-gradient(#e8eaec, #e8eaec);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.detail_wrapper {
+  :deep(.el-overlay-dialog) {
+    overflow-y: hidden;
+    height: calc(100% - 50px);
+  }
+  :deep(.el-dialog) {
+    height: calc(100% - 50px);
+  }
+  :deep(.el-dialog__body) {
+    overflow-y: scroll;
+    height: calc(100% - 168px);
+  }
+  .divide-line {
+    width: 20px;
+    text-align: center;
+  }
+  :deep(.el-cascader) {
+    width: 400px;
+  }
+  .ag-cell-value {
+    line-height: 20px;
+  }
+}

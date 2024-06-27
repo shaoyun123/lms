@@ -1,0 +1,23 @@
+// .page-header {
+//   position: absolute;
+//   z-index: 9;
+//   width: calc(100% - 30px);
+// }
+.detail_wrapper {
+  :deep(.el-overlay-dialog) {
+    overflow-y: hidden;
+    height: calc(100%);
+  }
+  :deep(.el-dialog) {
+    height: calc(100% - 100px);
+  }
+  :deep(.el-cascader) {
+    width: 400px;
+  }
+  .err{
+    :deep(.el-input) {
+      // --el-input-border-color:var(--el-color-danger);
+      --el-input-border-color:#D9001B;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.flex_between {
+    display: flex;
+    justify-content: space-between;
+}
+.ml12 {
+    margin-left: 12px;
+}
+.batch-operation {
+    margin-left: 12px;
+    width: 140px;
+}
+
+.fullDialog {
+    :deep(.el-dialog__body) {
+        overflow-y: auto;
+        max-height: calc(100vh - 248px);
+    }
+}
+.required-tag {
+    color: var(--danger-color);
+}

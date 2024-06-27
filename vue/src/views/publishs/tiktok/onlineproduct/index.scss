@@ -1,0 +1,100 @@
+.publish_wrapper {
+  .search_card {
+    :deep(.WH80) {
+      width: 80px !important;
+      .el-input.el-input--small {
+        width: 80px;
+      }
+    }
+    :deep(.WH55) {
+      width: 57px !important;
+      .el-input.el-input--small {
+        width: 57px;
+      }
+    }
+    .m02 {
+      margin: auto 2px;
+    }
+    :deep(.hide_tag) {
+      .el-select-tags-wrapper {
+        display: none;
+      }
+    }
+  }
+  .list_card {
+    position: relative;
+    .tools_btn {
+      padding: inherit;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    :deep(.sub_table_cell > div) {
+      width: inherit !important;
+    }
+  }
+
+  // 弹窗
+  .dialog_wrapper {
+    :deep(.el-overlay-dialog) {
+      overflow-y: hidden;
+      height: calc(100% - 50px);
+    }
+    :deep(.el-dialog) {
+      height: calc(100% - 50px);
+    }
+    :deep(.el-dialog__body) {
+      overflow-y: scroll;
+      height: calc(100% - 168px);
+    }
+  }
+
+  .disflex_between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .color_success {
+    color: #67c23a;
+  }
+  .color_error {
+    color: #f56c6c;
+  }
+  .hide_btn {
+    display: none;
+  }
+  .w100 {
+    width: 100px;
+  }
+  .w50 {
+    width: 50px;
+  }
+  .ml12 {
+    margin-left: 12px;
+  }
+  .ml05 {
+    margin-left: 5px;
+  }
+  .ml20 {
+    margin-left: 20px;
+  }
+  .mb10 {
+    margin-bottom: 10px;
+  }
+  .mr20 {
+    margin-right: 20px;
+  }
+  .disflex {
+    display: flex;
+  }
+  .full_width {
+    width: 100%;
+  }
+  .unit_style {
+    margin-right: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+}
