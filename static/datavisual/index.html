@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="/lms/static/img/koutu.png" type="image/x-icon">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/lms/static/vue/css/element-ui@2.13.0.css">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="components.css">
+    <!-- 引入组件库 -->
+    <script src="/lms/static/vue/js/vue@2.6.10.js"></script>
+    <script src="/lms/static/vue/js/element-ui@2.6.2.js"></script>
+    <script src="/lms/static/vue/js/vue-resource.min.js"></script>
+    <script src="/lms/static/vue/js/vuex.js"></script>
+    <script src="/lms/static/vue/js/axios.min.js"></script>
+    <!-- 引入自定义组件 -->
+    <script src="components/datavisonSearch.js"></script>
+    <script src="components/datavisionShow.js"></script>
+    <script src="components/datavisionConfig.js"></script>
+    <script src="components/datavisionMagnet.js"></script>
+    <script src="store.js"></script>
+    <title>数据可视化</title>
+</head>
+<body>
+    <div id="datavision">
+        <datavision-search></datavision-search>
+        <datavision-config></datavision-config>
+        <datavision-show></datavision-show>
+        <datavision-magnet></datavision-magnet>
+    </div>
+    <script>
+        
+        var datavision = new Vue({
+            el: '#datavision',
+            store,
+            components: {
+                datavisionSearch,
+                datavisionShow,
+                datavisionConfig,
+                datavisionMagnet
+            }
+        })
+    </script>
+</body>
+</html>

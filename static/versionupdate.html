@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>版本更新</title>
+    <script src="vue/js/vue@2.6.10.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="vue/css/element-ui@2.13.0.css">
+    <!-- 引入组件库 -->
+    <script src="vue/js/element-ui@2.6.2.js"></script>
+    <script src="vue/js/vue-resource.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-form ref="form"  label-width="80px">
+        <el-upload class="upload-demo" ref="upload"
+                   action="../versionUpdate/replaceStaticFile.html" name="versionUpdateFile"
+                   :on-preview="handlePreview" :on-remove="handleRemove"
+                   :file-list="fileList" :auto-upload="false" :on-success="onSuccess"
+                   :on-change="onChange" :on-progress="onProgress" :before-upload="beforeUpload" :data="uploadData">
+            <el-button slot="trigger" size="small" type="primary">选择要更新的文件</el-button>
+            <el-input v-model="filePath" placeholder="请输入文件路径，从 static/ 或则 jsp/ 目录开始(包含static、jsp)" style=' width: 500px;'></el-input>
+            <el-button style="margin-left: 10px;" size="small" type="warning" @click=uploadFile>更新</el-button>
+            <div slot="tip" class="el-upload__tip" style="color:red;">{{errorTips}}</div>
+        </el-upload>
+    </el-form>
+    <div slot="tip" class="el-upload__tip" style="color: #67C23A;">tips：</div>
+    <div slot="tip" class="el-upload__tip" style="color: #67C23A;">1：目前仅用于更新静态js/jsp文件。</div>
+    <div slot="tip" class="el-upload__tip" style="color: #67C23A;">2：更新js文件eg: 选择文件 smt_onlineproduct.js 文件路径 static/js/publishs/aliexpress/smt_onlineproduct.js 。</div>
+    <div slot="tip" class="el-upload__tip" style="color: #67C23A;">2：更新jsp文件eg: 选择文件 smt_onlineproduct.jsp 文件路径 jsp/publishs/aliexpress/smt_onlineproduct.jsp 。</div>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '页面加载于 ' + new Date().toLocaleString(),
+            fileList: [],
+            errorTips: '',
+            filePath:'',
+            uploadFileName: '',
+            uploadData:{
+                filePath:''
+            },
+            downloadHref: '',
+        },
+        created: function () {
+            console.log('message is: ' + this.message + new Date().toLocaleString())
+        },
+        methods: {
+            submitUpload() {
+
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            onChange(file, fileList) {
+                //this.uploadFileName="";
+            },
+            onSuccess(response, file, fileList) {
+                console.log("上传成功" + response.data);
+                this.$refs.upload.clearFiles();
+                this.filePath='';
+                if (response.code != '0000') {
+                    this.errorTips = response.msg;
+                } else {
+                    this.errorTips = response.msg;
+                    return false;
+                }
+            },
+            beforeUpload(file) {
+
+            },
+            onProgress(event, file, fileList) {
+                console.log("onProgress");
+            },
+            uploadFile() {
+                if (this.$refs.upload.uploadFiles == null || this.$refs.upload.uploadFiles.length == 0) {
+                    this.errorTips = "请选择要更新的文件";
+                    return false;
+                }
+                if(this.filePath==null||this.filePath==''){
+                    this.errorTips="请输入文件路径";
+                    return false;
+                }
+                this.uploadData.filePath=this.filePath;
+                this.$refs.upload.submit();
+            },
+        }
+    })
+</script>
+
+</body>
+</html>

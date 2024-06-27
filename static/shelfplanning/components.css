@@ -1,0 +1,145 @@
+/* 公共样式 */
+body .el-select-dropdown.el-popper {
+    z-index: 9999 !important;
+}
+body .el-loading-mask.is-fullscreen {
+    z-index: 10000 !important;
+}
+.lh32 {
+    line-height: 32px
+}
+.bgfff {
+  background: #fff
+}
+.mb10 {
+    margin-bottom: 10px
+}
+.mt10 {
+    margin-top: 10px;
+}
+.ml10 {
+   margin-left: 10px;
+}
+.tac {
+    text-align: center
+}
+.pt10pl15 {
+   padding: 10px 15px
+}
+/*父容器样式*/
+#shelfplanning {
+    position: relative;
+}
+/* 调整switch样式 */
+.cellRuleSwitch .el-switch__core {
+   width: 90px !important;
+}
+.cellRuleSwitch  .el-switch__label {
+    position: absolute;
+    display: none;
+    color: #fff;
+  }
+  /*打开时文字位置设置*/
+  .cellRuleSwitch  .el-switch__label--right {
+    z-index: 1;
+    right: 8px;
+  }
+  /*关闭时文字位置设置*/
+  .cellRuleSwitch  .el-switch__label--left {
+    z-index: 1;
+    left: 22px;
+  }
+  /*显示文字*/
+  .cellRuleSwitch  .el-switch__label.is-active {
+    display: block;
+  }
+  .cellRuleSwitch  .el-switch .el-switch__core,
+  .el-switch .el-switch__label {
+    width: 70px !important;
+}
+
+
+/* 设置区域样式 */
+.planSet {
+  /* width: 294px; */
+  width: 285px;
+  position: fixed;
+  overflow-y: scroll;
+  height: 100%;
+  z-index: 9998;
+  background: #fff
+}
+.setBox  {
+  border: 1px solid #dcdfe6;
+  padding: 20px;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.setBox:first-child {
+  margin-bottom: 5px;
+  border-bottom: 1px solid #dcdfe6
+}
+
+.setBox:last-child {
+  border-bottom: 1px solid #dcdfe6
+}
+
+.setQuery {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/*区域选择样式*/
+.planSort {
+  margin-left: 314px;
+}
+.planSort ul{
+  overflow: hidden;
+  width: 120px;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+.planSort ul li {
+  float: left;
+  width: 110px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  border: 1px solid #ccc;
+  margin: 5px;
+  list-style: none;
+  cursor: pointer;
+}
+/*展示区域样式*/
+.planDisplay {
+  margin-left: 314px;
+  padding-left: 50px;
+}
+.planDisplay .shelfParentTable td>.shelfParentTableEmpty {
+  min-width: 200px;
+  min-height: 100px;
+}
+.planDisplay .shelfParentTableFull {
+  width: 200px;
+  height: 100px;
+  line-height: 100px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  text-align: center;
+  margin: 5px;
+  position: relative;
+}
+.planDisplay .shelfParentTableFull .el-radio {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+.planDisplay .box-card {
+  /* width: 760px; */
+  margin: 10px;
+}
+.planDisplay .box-card .el-card__header{
+ padding: 8px;
+}

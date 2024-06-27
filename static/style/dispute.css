@@ -1,0 +1,286 @@
+  .labelSel {
+      padding: 0 15px;
+  }
+  .pl20 {
+      padding-left: 20px
+  }
+  .p20 {
+    padding: 20px 40px 0 0;
+  }
+
+.mw100 {
+    min-width: 100px;
+}
+.mlIns10 {
+    margin-left: 10px;
+    text-align: left;
+}
+
+  /*单个模块css*/
+  .disputeBlock {
+      display: block;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 100%;
+      /*margin: 0 auto;*/
+      margin-bottom: 10px;
+  }
+  /*模块1:步骤图;*/
+  .disputeBlock:nth-child(1) {
+      margin-bottom: 0;
+      border-bottom: none
+  }
+  /*模块2:方案;*/
+  .disputeBlock:nth-child(2) {
+     overflow: hidden;
+     margin-bottom: 0;
+     border-bottom: none;
+  }
+  .disputeBlock:nth-child(2) .disputePlans{
+     width: 45%;
+     box-sizing: border-box;
+     border: 1px solid #ccc;
+     margin-right: 5%;
+     min-height: 200px;
+     float: left;
+     margin-bottom: 10px;
+     padding-left: 10px;
+  }
+  .disputeBlock:nth-child(2) .disputePlans>div:nth-child(1) {
+     font-size: 20px;
+     font-weight: 700;
+     margin-bottom: 20px
+  }
+  .disputeBlock:nth-child(2) .disputePlans>table tr td {
+    height: 30px;
+    max-width: 500px;
+    line-height: 30px;
+    vertical-align: text-top;
+  }
+  .disputeBlock:nth-child(2) .disputePlans>button {
+    margin-bottom: 5px;
+    margin-left: calc(100% - 50px);
+  }
+  /*模块3: 证据;*/
+  .disputeBlock:nth-child(3) {
+    padding-bottom: none
+  }
+  .disputeBlock:nth-child(3)>div:nth-child(1) {
+     font-size: 22px;
+     font-weight: 700;
+     border-bottom: 1px solid #ccc;
+     padding: 10px;
+  }
+  .disputeBlock:nth-child(3)>div.disputeEvidence {
+     width: 50%;
+     box-sizing: border-box;
+     border-right: 1px solid #ccc;
+     float: left;
+     height: 100%;
+     padding: 10px 0 0 30px
+  }
+  .disputeBlock:nth-child(3)>div.disputeEvidence span{
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .disputeBlock:nth-child(3)>div.disputeEvidence:last-child {
+    border-right: none
+  }
+  .disputeBlock:nth-child(3)>div.disputeEvidence .disputeImg{
+    overflow: hidden;
+  }
+  .disputeBlock:nth-child(3)>div.disputeEvidence .disputeImg li {
+    float: left;
+    margin:10px 10px 5px 5px;
+  }
+  /*模块4:订单*/
+  .disputeBlock:nth-child(4)>.disputeOrderes {
+      width: 50%;
+      box-sizing: border-box;
+      /* border-right: 1px solid #ccc; */
+      float: left;
+      height: 100%;
+  }
+  .disputeBlock:nth-child(4)>.disputeOrderes:last-child {
+      border-right: none;
+      padding-left: 20px;
+      border-left: 1px solid #ccc;
+  }
+  .disputeBlock:nth-child(4)>.disputeOrderes .disputeOrderesTitle{
+       font-size: 20px;
+       font-weight: 700;
+       padding: 10px
+  }
+  .disputeBlock:nth-child(4)>.disputeOrderes .disputeOrderesTitle span{
+      font-size: 20px;
+       font-weight: 700;
+       padding: 10px
+  }
+   .disputeBlock:nth-child(4)>.disputeOrderes .disputeOrderesTitle button {
+      /* margin-left: 70% */
+   }
+  .disputeBlock:nth-child(4)>.disputeOrderes .disputeOrderesList {
+     margin-left: 30px;
+  }
+  .disputeBlock:nth-child(4)>.disputeOrderes .disputeOrderesList td {
+     height: 30px;
+     line-height: 30px;
+     min-width: 100px;
+     vertical-align: top;
+  }
+  /* .disputeBlock:nth-child(4)>.disputeOrderes:nth-child(2) .disputeOrderesList td {
+    font-size: 20px;
+    font-weight: 700
+  } */
+  /*第5模块:订单留言*/
+  .disputeBlock:nth-child(5) .disputeOrderMsg {
+      width: 70%;
+      float: left;
+      box-sizing: border-box;
+  }
+  .disputeBlock:nth-child(5) .disputeOrderMsg:last-child {
+      width: 30%;
+      padding-left: 30px;
+  } 
+    .disputeBlock:nth-child(5) .disputeOrderMsg:first-child button {
+        margin-top: 10px;
+        margin-left: calc(100% - 44px);
+    }
+  .disputeBlock:nth-child(5) .disputeOrderMsg .disputeOrderImgDet{
+      margin-top: 20px;
+  }
+  /*第6模块:消息记录*/
+  .disputeBlock:nth-child(6) .disputeMsgRecordR,
+  .disputeBlock:nth-child(6) .disputeMsgRecordL {
+      float: right;
+      width: 50%;
+      /* min-height:150px; */
+      border:1px solid #ccc;
+      overflow: hidden;
+      border-radius: 5px;
+  }
+  .disputeBlock:nth-child(6) .disputeMsgRecordRTitle,
+  .disputeBlock:nth-child(6) .disputeMsgRecordLTitle {
+     border-bottom: 1px solid #ccc;
+     padding: 5px;
+     color:#49778d;
+     background-color: #d9eef6;
+  }
+  .disputeBlock:nth-child(6) .disputeMsgRecordLTitle {
+    color:#fff;
+    background-color: #418bca;
+  }
+  .disputeBlock:nth-child(6) .disputeMsgRecordRCont,
+  .disputeBlock:nth-child(6) .disputeMsgRecordLCont{
+      padding: 5px;
+      /* min-height: 120px; */
+      min-height: 60px;
+  }
+  .disputeBlock:nth-child(6) .disputeMsgRecordLCont{
+      background-color: #98ccff;
+  }
+  .disputeBlock:nth-child(6) .disputeMsgRecordL{
+      float: left;
+      margin-top:15px
+  }
+  /*第7模块:纠纷历史*/
+  .disputeBlock:last-child  .disputeHistoryTitle {
+     font-size: 20px;
+     font-weight: 700;
+     padding: 10px;
+  }
+
+  /*步骤条css*/
+  .disputeContainer {
+      padding: 0 20px;
+      overflow: hidden;
+      width: 80%;
+      margin: 0 auto;
+      margin-bottom: 20px;
+  }
+
+  .disputeStepBar {
+      width: 30%;
+      float: left;
+      margin-right: 20px;
+  }
+
+  .disputeStepBarTop {
+      color: #ccc;
+      margin: 0 0 12px -20px;
+  }
+
+  .disputeStepBarMid {
+      height: 20px;
+      line-height: 20px;
+      position: relative;
+  }
+
+  .disputeStepBarBom {
+      margin: 12px 0 0 -14px;
+  }
+
+  .disputeCircle {
+      width: 20px;
+      height: 20px;
+      border: 3px solid #ccc;
+      border-radius: 50%;
+      box-sizing: border-box;
+  }
+
+  /*虚线*/
+  .disputeLine {
+      width: 100%;
+      border: 1px dashed #ccc;
+      border-width: 1px 0 0 0;
+      height: 1px;
+      margin-bottom: 20px;
+  }
+
+  .disputeDash {
+      width: 100%;
+      border: 1px dashed #ccc;
+      border-width: 1px 0 0 0;
+      height: 1px;
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      right: 20px;
+  }
+
+  /*完成和选中css处理*/
+  .disputeSuccessC {
+      background-color: #ff7300;
+      border: 3px solid #ff7300;
+  }
+
+  .disputeProcessC {
+      border: 3px solid #ff7300 !important;
+  }
+
+  .disputeProcessD,
+  .disputeSuccessD {
+      border: 2px solid #ff7300;
+      border-width: 2px 0 0 0;
+      height: 2px;
+  }
+
+  /*表格css处理*/
+  .disputeTable {
+      margin-left: 10%
+  }
+
+  .disputeTable tr td {
+      height: 30px;
+      line-height: 30px;
+      letter-spacing: 1px
+  }
+
+  .disputeTable tr td:nth-child(1) {
+      text-align: right;
+  }
+
+  .disputeTable tr td:nth-child(2) {
+      font-weight: 700;
+  }

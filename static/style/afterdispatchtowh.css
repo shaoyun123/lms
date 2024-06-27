@@ -1,0 +1,66 @@
+.totalWeight {
+    position: absolute;
+    right: 7%;
+    bottom: 5%;
+}
+/* 弹框样式end */
+/* 搜索条件样式start */
+.dis_flex_space {
+    display: flex;
+    justify-content: space-between;
+}
+.externalContainAuditorder {
+    position: relative;
+    width: 0;
+    float: left;
+    height: 0;
+    z-index: 20190918;
+}
+.externalPopAuditorder {
+    clear: left;
+    position: relative;
+    left: -35.667vw;
+    top: 40px;
+    width: 35vw;
+    border: 1px solid #e6e6e6;
+    background-color: lightyellow;
+    padding: 20px 0;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px grey;
+}
+/* 搜索条件样式end */
+
+.toBedelivered-noteContent-tag{
+color:#008B8B;
+border: 1px solid #008B8B;
+background-color: #fff;
+}
+.tobedelivered_store_style .xm-select-dl{
+  width:-webkit-fill-available !important;
+}
+
+.waittopack_store_style .xm-select-dl {
+  width: -webkit-fill-available !important;
+}
+.unit,
+.unit_mul {
+  color: red !important;
+  font-weight: bold;
+  font-size: 50px !important;
+}
+.afterdispatchtowh-hide {
+  display: none !important;
+}
+
+#waittopacktoInterceptTabs .layui-tab-title .layui-this {
+  color: #1E9FFF !important;
+}
+
+
+#waittopacktoInterceptTabs .layui-tab-title .layui-this:after {
+  border: none !important;
+  color: #1E9FFF;
+}
+#waittopacktoInterceptTabs .layui-tab-title{
+  height: 35px !important;
+}

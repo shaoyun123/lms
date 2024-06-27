@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单详情</title>
+    <script src="./jquery.js"></script>
+    <script src="./layui/layui.all.js"></script>
+</head>
+<body>
+    <div class="detailPage"></div>
+    <script>   
+        (function(){
+            var id = window.location.search.split('=')[1];
+            // console.log(id);
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: '/lms/ebayMessage/getMsgListByIds.html?idArr='+id,
+                success: function(res){
+                    console.log(res);
+                    if(res.code == '0000'){
+                        // console.log($('.detailPage'))
+                        let data = res.data[0];
+                        if(data.ebayMsg.msgTextUrl){
+                            window.location.href = data.ebayMsg.msgTextUrl
+                        }else{
+                            $('.detailPage').html(data.ebayMsg.msgText);
+                        }
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

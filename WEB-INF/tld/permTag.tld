@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"      
+    "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">  
+<taglib>  
+    <tlib-version>1.0</tlib-version><!-- 标签库版本 -->  
+    <jsp-version>1.2</jsp-version>  <!-- 标签库要求的JSP规范版本 -->  
+    <short-name>permTag</short-name>   <!-- JSP页面编写工具可以用来创建助记名的可选名字 -->  
+    <tag>
+        <!-- 定义标签名 -->
+        <name>perm</name>
+        <!-- 定义标签处理类 -->
+        <tag-class>com.epean.trade.lms.tag.PermTag</tag-class>
+        <!-- 定义标签体 -->
+        <!-- body-content指的是标签内的内容，为empty或者scriptless两个属性，前者表明没有内容，后者表明有非jsp的内容-->
+        <body-content>scriptless</body-content>
+        <attribute>
+            <!-- 标签的属性 funcCode必填 -->
+            <name>funcCode</name>  
+            <rtexprvalue>true</rtexprvalue>  
+        </attribute>
+    </tag>
+    <tag>
+        <!-- 定义标签名 -->
+        <name>lacksPerm</name>
+        <!-- 定义标签处理类 -->
+        <tag-class>com.epean.trade.lms.tag.LacksPermTag</tag-class>
+        <!-- 定义标签体 -->
+        <!-- body-content指的是标签内的内容，为empty或者scriptless两个属性，前者表明没有内容，后者表明有非jsp的内容-->
+        <body-content>scriptless</body-content>
+        <attribute>
+            <!-- 标签的属性 funcCode必填 -->
+            <name>funcCode</name>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>  

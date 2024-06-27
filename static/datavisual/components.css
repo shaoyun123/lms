@@ -1,0 +1,66 @@
+.fs10{
+    font-size: 10px;
+}
+/* 显示页面的样式调整 */
+.datavisionShow .el-card__body{
+    padding: 3px !important;
+}
+.datavisionShow .el-tag{
+    height: 20px !important;
+    line-height: 20px !important;
+}
+/* index文件 */
+#datavision {
+    min-height: 300px;
+}
+/* 搜索模块样式 */
+.datavisionSearch .searchSel {
+    width: 200px;
+}
+.datavisionSearch .el-form-item__content .el-input-group {
+    vertical-align: middle;
+}
+.datavisionSearch .searchSku {
+    width: 120px;
+}
+/* 显示模块样式 */
+/* .datavisionShow {
+    padding-left: 50px;
+} */
+
+.datavisionShow .box-card .el-card__header{
+   /* padding: 8px; */
+   padding: 0px;
+}
+.datavisionShow .box-card .shelfTable {
+    border-right:1px solid #ebeef5;
+    border-bottom:1px solid #ebeef5;
+    text-align: center
+}
+.datavisionShow .box-card .shelfTable td {
+    border-left:1px solid #ebeef5;
+    border-top:1px solid #ebeef5;
+    /* padding: 10px 15px; */
+    /* width: 20px;
+    height:20px; */
+}
+.datavisionShow .box-card .shelfTable td span {
+    font-size: 10px;
+}
+.datavisionShow .box-card .shelfTable.currentSelTable {
+    background: #ecf5ff;
+    border-right:1px solid #fff;
+    border-bottom:1px solid #fff;
+    text-align: center
+}
+.datavisionShow .box-card .shelfTable.currentSelTable td {
+    border-left:1px solid #fff;
+    border-top:1px solid #fff;
+    padding: 10px 15px;
+}
+/* 磁贴模块样式 */
+.datavisionMagnet{
+    position: fixed;
+    right: 10px;
+    top: 80px;
+}

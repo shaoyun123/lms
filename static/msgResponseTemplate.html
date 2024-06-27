@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回复</title>
+    <link rel="stylesheet" href="./vue/css/reset.css">
+    <link rel="stylesheet" href="./vue/css/element-ui@2.13.0.css">
+    <link rel="stylesheet" href="./vue/css/msgResponseTemplate.css">
+    <link rel="stylesheet" href="./font_iconfont/iconfont.css" media="all">
+    <script src="./vue/js/vue@2.6.10.js"></script>
+    <script src="./vue/js/elementui@2.13.js"></script>
+    <script src="./vue/js/axios.min.js"></script>
+
+    <style>
+        .split-tag {
+            width: 16px;
+            height: 16px;
+            margin: -3px 0px 0px 10px;
+            color: #fff;
+            text-align: center;
+            line-height: 16px;
+            background-color: #FFB800;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <el-row :gutter="10" justify="center">
+            <el-col :span="12">
+                <div class="dialogBox">
+                    <div class="dialogBox-header" v-if="content.ebayMsg">
+                        <span class="dialogBox-header-sender"
+                            v-if="content.ebayMsg.folderId==0">{{content.ebayMsg.sender}}</span>
+                        <span class="dialogBox-header-sender" v-else>{{content.ebayMsg.sendToName}}</span>
+                        <span class="dialogBox-header-store m-left10">[店铺:{{content.ebayMsg.storeName}}]</span>
+                    </div>
+                    <div class="dialogBox-content" v-if="content.msgDialogEbayDtos">
+                        <div v-for="(item, i) in content.msgDialogEbayDtos">
+                            <!-- 买家消息 -->
+                            <div v-if="item.msgFromWho == 'buyer'" class="buyer-info" ref="buyer">
+                                <input type="hidden" :value="item.id +'&'+item.sender">
+                                <div class="name-title">
+                                    <span style="color:#428bca;font-weight: bold;">{{item.sender}}</span>
+                                    <span style="color:#a0a3a6;margin-left:10px;">{{Format(item.sendTime, 'yyyy-MM-dd hh:mm:ss')}}</span>
+                                </div>
+                                <pre class="buyer-resonse" v-html="item.msgContent"></pre>
+                                <div v-if="item.mediaUrls">
+                                    <ul style="display: flex;">
+                                        <li v-for="(img, index) in item.mediaUrls.split(',')" :key="index"
+                                            style="margin:5px;">
+                                            <el-image style="width: 100px; height: 100px" fit="fill" :src="img"
+                                                :preview-src-list="item.mediaUrls.split(',')">
+                                            </el-image>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- 买家消息 -->
+                            <div v-else class="seller-info">
+                                <div class="name-title">
+                                    <span v-if="item.replyStatus==0">
+                                        <span style="color:#a0a3a6;margin-right:10px;">{{Format(item.sendTime,
+                                            'yyyy-MM-dd hh:mm:ss')}}</span>
+                                        <span style="color:#428bca;font-weight: bold;">{{item.sender}}</span>
+                                        <el-tooltip effect="dark"
+                                            :content="'延时到'+Format(item.replyTimingTime, 'yyyy-MM-dd hh:mm:ss')+'发送'"
+                                            placement="top-end">
+                                            <i class="el-icon-circle-plus" style="color:#E6A23C;"></i>
+                                        </el-tooltip>
+                                    </span>
+                                    <span v-else-if="item.replyStatus==1 || !item.replyStatus==1">
+                                        <span style="color:#a0a3a6;margin-right:10px;">{{Format(item.sendTime,
+                                            'yyyy-MM-dd hh:mm:ss')}}</span>
+                                        <span style="color:#428bca;font-weight: bold;">{{item.sender}}</span>
+                                        <el-tooltip effect="dark" content="发送成功" placement="top-end">
+                                            <i class="el-icon-success" style="color:#67C23A;"></i>
+                                        </el-tooltip>
+                                    </span>
+                                    <span v-else>
+                                        <span style="color:#a0a3a6;margin-right:10px;">{{Format(item.replyTimingTime,
+                                            'yyyy-MM-dd hh:mm:ss')}}</span>
+                                        <span style="color:#428bca;font-weight: bold;">{{item.sender}}</span>
+                                        <el-tooltip effect="dark" :content="'发送失败:'+ item.replyResult"
+                                            placement="top-end">
+                                            <i class="el-icon-error" style="color:#F56C6C;"></i>
+                                        </el-tooltip>
+                                    </span>
+                                </div>
+                                <pre class="seller-resonse" v-html="item.msgContent"></pre>
+                                <div v-if="item.mediaUrls">
+                                    <ul style="display: flex;">
+                                        <li v-for="(img, index) in item.mediaUrls.split(',')" :key="index"
+                                            style="margin:5px;">
+                                            <el-image style="width: 100px; height: 100px" fit="fill" :src="img"
+                                                :preview-src-list="item.mediaUrls.split(',')">
+                                            </el-image>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dialogBox-tool">
+                        <div style="width:40px;text-align: center;">
+                            <el-upload class="upload-demo" action="/lms/ebayMessage/uploadImg.html"
+                                :on-success="uploadSuccessHandle" :before-remove="uploadRemoveHandle"
+                                :file-list="fileList" list-type="picture">
+                                <el-tooltip class="item" effect="dark" content="上传图片" placement="left">
+                                    <i class="el-icon-picture-outline icon-size"></i>
+                                </el-tooltip>
+                            </el-upload>
+
+                        </div>
+                        <div style="line-height: 38px;">
+                            <el-popover placement="top-start" width="400" trigger="click">
+                                <el-select v-model="value" filterable placeholder="请选择" @change="changeSelect">
+                                    <el-option v-for="item in options" :key="item.id" :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                                <el-button size="mini" slot="reference" plain round>模板</el-button>
+                            </el-popover>
+                        </div>
+                    </div>
+                    <div class="dialogBox-response" contentEditable="true" ref="dialogBox-response">
+                    </div>
+                </div>
+                <div style="text-align:right;margin-top:10px;">
+                    <el-checkbox v-model="checked" style="margin-right:60px;" @change="cksChangeHandle">延迟回复
+                    </el-checkbox>
+                    <el-button type="primary" size="medium" @click="sendMsgHandle">发送</el-button>
+                    <el-button size="medium" @click="closePage">关闭</el-button>
+                </div>
+            </el-col>
+            <el-col :span="5.5">
+                <div class="orderDetail">
+                    <!-- 商品信息 -->
+                    <div class="orderDetail-product marginB20" v-loading="loading"
+                        v-if="content.msgMymsgEbayProd && content.msgMymsgEbayProd.length">
+                        <div class="orderDetail-title">商品信息</div>
+                        <div class="orderDetail-product-content" v-for="(item, i) in content.msgMymsgEbayProd">
+                            <div class="product-img">
+                                <img :src="item.firstImage" alt="主图" width="60" height="60" v-if="item.firstImage">
+                                <img src="./img/kong.png" alt="主图" width="60" height="60" v-else>
+                            </div>
+                            <div class="product-detail">
+                                <div style="font-size: 13px;display: flex;">
+                                    <span v-if="item.isConsultationGoods" class="iconfont icon-zixun"
+                                        title="咨询商品"></span>
+                                    <span>{{item.itemTitle}}</span>
+                                </div>
+                                <div
+                                    style="display:flex;justify-content: space-between;margin-top:18px;font-size: 12px;">
+                                    <a :href=`http://www.ebay.co.uk/itm/${item.itemId}`
+                                        target="_blank">{{item.itemId}}</a>
+                                    <span>
+                                        <span class="span-aqua">{{item.prodSSku}}</span>
+                                        <span class="span-burlywood">{{item.weight}}g</span>
+                                        <span class="span-aquamarine">{{item.lCurrencyCode}}:{{item.amt}} *
+                                            {{item.lQty}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else style="margin-bottom: 10px">
+                        暂无商品
+                    </div>
+                    <!-- 订单信息 -->
+                    <div class="orderDetail-order" v-if="content.msgOrderInfoDtos && content.msgOrderInfoDtos.length" v-loading="loading">
+                        <div class="orderDetail-title">
+                            订单信息
+                            <span v-if="content.msgOrderInfoDtos[0].checkorder==11" class="iconfont icon-chai">
+                            </span>
+                            <span
+                                v-if="content.msgOrderInfoDtos[0].checkorder==11&& content.msgOrderInfoDtos[0].mergeflag==1"
+                                class="iconfont icon-he">
+                            </span>
+                        </div>
+                        <div class="order-detail">
+                            <!-- 普元单号和金额 -->
+                            <div class="line-height30">
+                                <span class="span-title">订单编号:</span>
+                                <span style="cursor: pointer;" @click="getOrderDetails(content.msgOrderInfoDtos[0].nid)">{{content.msgOrderInfoDtos[0].nid}}</span>
+                                <span>({{content.msgOrderInfoDtos[0].orderstatus}},
+                                    {{content.msgOrderInfoDtos[0].currencycode}}:
+                                    {{content.msgOrderInfoDtos[0].amt}})</span>
+                            </div>
+                            <div class="line-height30">
+                                <span class="span-title">订单时间:</span>
+                                <span v-if="content.msgOrderInfoDtos[0].ordertime">{{
+                                    Format(content.msgOrderInfoDtos[0].ordertime, 'yyyy-MM-dd hh:mm:ss') }}</span>
+                                <span v-else>无</span>
+                            </div>
+                            <div class="line-height30">
+                                <span class="span-title">发货时间:</span>
+                                <span
+                                    v-if="content.msgOrderInfoDtos[0].closingtime">{{Format(content.msgOrderInfoDtos[0].closingdate,
+                                    'yyyy-MM-dd hh:mm:ss')}}</span>
+                                <span v-else>无</span>
+                            </div>
+                            <!-- 收货信息 -->
+                            <div>
+                                <div class="line-height30">
+                                    <span class="span-title">&nbsp;&nbsp;收件人:</span>
+                                    <span>{{content.msgOrderInfoDtos[0].shiptoname}}</span>
+                                </div>
+                                <div class="line-height30">
+                                    <span class="span-title">付款邮箱:</span>
+                                    <span>{{content.msgOrderInfoDtos[0].email}}</span>
+                                </div>
+                                <div class="line-height30">
+                                    <span class="span-title">延迟天数:</span>
+                                    <span>{{content.msgOrderInfoDtos[0].delayDays}}</span>
+                                </div>
+                                <div class="line-height30" style="height: auto;">
+                                    <span class="span-title">收货地址:</span>
+                                    <span>
+                                        {{content.msgOrderInfoDtos[0].shiptocountryname}}
+                                        {{content.msgOrderInfoDtos[0].shiptostate}}
+                                        {{content.msgOrderInfoDtos[0].shiptocity}}
+                                        {{content.msgOrderInfoDtos[0].shiptostreet}}
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- 物流信息 -->
+                            <div>
+                                <div class="line-height30">
+                                    <span class="span-title">买家指定:</span>{{content.msgOrderInfoDtos[0].custom}}
+                                </div>
+                                <div class="line-height30">
+                                    <span class="span-title">实发物流:</span>{{content.msgOrderInfoDtos[0].logisName}}
+                                </div>
+                                <div class="line-height30">
+                                    <span
+                                        class="span-title">&nbsp;&nbsp;跟踪号:</span>{{content.msgOrderInfoDtos[0].trackno}}
+                                </div>
+                                <div class="line-height30" style="height: auto;">
+                                    <span class="span-title">买家留言:</span>{{content.msgOrderInfoDtos[0].note}}
+                                </div>
+                                <div class="line-height30" style="height: auto;">
+                                    <span class="span-title">内部便签:</span>{{content.msgOrderInfoDtos[0].memo}}
+                                </div>
+                                <div class="line-height30 orderDetail-logs">
+                                    <!-- <el-button size="mini" type="primary"
+                                        @click="handleLogs(content.msgOrderInfoDtos[0].pTradelogs)">日志</el-button>
+                                    <el-button size="mini" type="primary" @click="handleOrders">更多订单</el-button> -->
+                                    <el-button size="mini" type="primary" @click="orderRemark(content.msgOrderInfoDtos[0]?.nid)">订单备注</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        暂无订单
+                    </div>
+                    <!-- 问题分类 -->
+                    <div style="margin-top:20px;">
+                        <el-form :inline="true" :model="problemTypeForm">
+                            <el-form-item>
+                                <el-select v-model="problemTypeForm.markQuestion" placeholder="问题分类" size="medium">
+                                    <el-option v-for="item in problemTypeArr" :key="item" :label="item" :value="item">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" size="medium" @click="problemTypeSubmit">提交</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="5">
+                <div class="tab-content">
+                    <el-tabs v-model="activeKey" class="order-email">
+                        <el-tab-pane label="历史订单" name="0">
+                            <div class="card-container" v-if="orderInfo && orderInfo.length > 0">
+                                <el-card shadow="always" v-for="item in orderInfo" :key="item.id">
+                                    <div class="order-title">
+                                        <div class="title-top">
+                                            <div class="order-name" style="display: flex">
+                                                <i class="el-icon-tickets"></i>
+                                                <span style="font-weight: bold;cursor: pointer;" @click="getOrderDetails(item.id)">{{ item.id }}</span>
+                                                <div v-if="item.orderType === 'split'" class="split-tag">拆</div>
+                                                <span v-if="item.orderType === 'resend'" style="color: red;padding-left:10px">(重寄)</span>
+                                            </div>
+                                            <div class="order-status">{{ getStatus(item.processStatus) }}</div>
+                                        </div>
+                                        <div class="title-bottom">
+                                            {{item.platOrderId}} <i @click="handleCopy(item.platOrderId)" class="el-icon-copy-document"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="order-details" v-for="cItem in getDetailsData(item.orderDetails)">
+                                            <div class="detail-img">
+                                                <img :src="cItem.imageUrl" />
+                                            </div>
+                                            <div class="detail">
+                                                <div class="title d-flex">
+                                                    <div class="hl-title">{{ cItem.prodTitle }}</div>
+                                                    <div>{{ cItem.currency }} {{ cItem.platUnitPrice }}</div>
+                                                </div>
+                                                <div class="property d-flex">
+                                                    <div class="color-grey">子sku属性：</div>
+                                                    <div>x {{cItem.platQuantity}}</div>
+                                                </div>
+                                                <div>
+                                                    <span  class="color-grey">店铺子SKU： {{ cItem.storeSSku }}</span>
+                                                    <i class="el-icon-copy-document" @click="handleCopy(cItem.storeSSku)"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="order-info">
+                                        <div class="d-flex" style="margin-bottom: 10px;">
+                                            <div><i class="el-icon-wallet"></i><span class="color-grey">订单金额</span></div>
+                                            <div style="color: red;font-weight:bold">{{ item.currency }} {{ item.platOrderAmt }}</div>
+                                        </div>
+                                        <div class="d-flex" style="margin-bottom: 10px;">
+                                            <div><i class="el-icon-date"></i><span class="color-grey">订单时间</span></div>
+                                            <div>{{ Format(item.orderTimePlat, "yyyy-MM-dd hh:mm:ss") }}</div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div><i class="el-icon-date"></i><span class="color-grey">发货时间</span></div>
+                                            <div>{{ Format(item.shippingTime, "yyyy-MM-dd hh:mm:ss") }}</div>
+                                        </div>
+                                    </div>
+                                    <div v-if="item.orderDetails.length > 1" class="switch-btn" @click="displayCount > 1 ? handleHide(item.orderDetails) : handleView(item.orderDetails)">
+                                        {{ displayCount === 1 ? '展开' : '收起'}}
+                                    </div>
+                                </el-card>
+                            </div>
+                            <div v-else style="text-align: center;">暂无数据</div>
+                            
+                        </el-tab-pane>
+                        <el-tab-pane label="历史邮件" name="1">
+                            <div class="card-container">
+                                <el-table :data="emailList" border :header-cell-style="{background:'rgb(242,242,242)'}">
+                                    <el-table-column
+                                        label="日期"
+                                        width="100">
+                                        <template #default="{row}">
+                                            {{ Format(row.receiveDate, "yyyy-MM-dd hh:mm:ss") }}
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="itemId"
+                                        label="物品号"
+                                        width="120">
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="date"
+                                        label="消息主题">
+                                        <template slot-scope="scope">
+                                            <a style="color: rgb(64, 158, 255); cursor: pointer;" :href="`${originUrl}?id=${scope.row.id}&storeAcctId=${storeAcctId}&buyer=${buyer}`" target="_blank">{{ scope.row.subject }}</a>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+            </el-col>
+        </el-row>
+
+        <!-- 日志弹框 -->
+        <el-dialog title="日志" :visible.sync="dialogTableVisible" @close="handleClose">
+            <el-table :data="gridData" border :header-cell-style="{background:'rgb(242,242,242)'}">
+                <!-- <el-table-column property="tradenid" label="订单号" width="100"></el-table-column> -->
+                <!-- <el-table-column property="operator" label="操作人"></el-table-column> -->
+                <el-table-column property="logs" label="操作"></el-table-column>
+            </el-table>
+        </el-dialog>
+
+        <!-- 更多订单弹框 -->
+        <el-dialog title="更多订单" :visible.sync="dialogMoreOrderVisible" width="90%">
+            <el-table :data="moreOrderData" border :header-cell-style="{background:'rgb(242,242,242)'}">
+                <el-table-column property="nid" label="普源单号" width="100"></el-table-column>
+                <el-table-column property="trackno" label="跟踪号" width="100"></el-table-column>
+                <el-table-column property="orderstatus" label="订单状态" width="100"></el-table-column>
+                <el-table-column label="订单金额" width="100">
+                    <template slot-scope="scope">
+                        <strong>{{scope.row.currencycode}}:</strong>{{scope.row.amt}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单时间" width="150">
+                    <template slot-scope="scope">
+                        <span>{{Format(scope.row.ordertime, 'yyyy-MM-dd hh:mm:ss')}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="发货时间" width="150">
+                    <template slot-scope="scope">
+                        <span>{{Format(scope.row.closingdate, 'yyyy-MM-dd hh:mm:ss')}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="shiptoname" label="收件人"></el-table-column>
+                <el-table-column label="收货地址">
+                    <template slot-scope="scope">
+                        <span>
+                            {{scope.row.shiptocountryname}}
+                            {{scope.row.shiptostate}}
+                            {{scope.row.shiptocity}}
+                            {{scope.row.shiptostreet}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="custom" label="买家指定"></el-table-column>
+                <el-table-column property="logisName" label="实发物流"></el-table-column>
+                <el-table-column property="allgoodsdetail" label="商品明细"></el-table-column>
+                <el-table-column label="操作" width="60">
+                    <template slot-scope="scope">
+                        <el-button @click="handleClick(scope.row)" type="text" size="mini">日志</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
+
+        <!-- 订单备注弹窗 -->
+        <el-dialog title="备注" :visible.sync="isShowRemark" width="40%">
+            <el-form v-model="remarkForm">
+                <el-form-item label="类型" prop="noteType">
+                    <el-select v-model="remarkForm.noteType">
+                        <el-option v-for="item in remarkTypeList" :label="item.name" :value="item.name"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="备注" prop="noteContent">
+                    <el-input type="textarea" style="max-width: 500px" v-model="remarkForm.noteContent"></el-input>
+                </el-form-item>
+            </el-form>
+            <el-table :data="remarkRecordsList" border :header-cell-style="{background:'rgb(242,242,242)'}">
+                <el-table-column label="时间">
+                    <template slot-scope="scope">
+                        {{ Format(scope.row.createTime, "yyyy-MM-dd hh:mm:ss") }}
+                    </template>
+                </el-table-column>
+                <el-table-column property="creator" label="操作人"></el-table-column>
+                <el-table-column property="noteType" label="类型"></el-table-column>
+                <el-table-column property="noteContent" label="内容"></el-table-column>
+            </el-table>
+            <span slot="footer">
+                <el-button @click="isShowRemark = false">取 消</el-button>
+                <el-button type="primary" @click="handleRemark">确 定</el-button>
+              </span>
+        </el-dialog>
+
+        <!-- 订单详情弹窗 -->
+        <el-dialog :title="`订单详情-${orderDetailInfo.id}`" :visible.sync="isShowDetail" width="90%">
+            <el-tabs v-model="detailKey" @tab-click="handleClickDetail">
+                <el-tab-pane label="详情" name="0">
+                    <el-form v-model="orderDetailInfo" :inline="true" size="small">
+                        <el-form-item label="订单编号">
+                            <el-input v-model="orderDetailInfo.id" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="店铺单号">
+                            <el-input v-model="orderDetailInfo.platOrderId" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="店铺">
+                            <el-input v-model="orderDetailInfo.storeAcct" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="站点">
+                            <el-input v-model="orderDetailInfo.siteName" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="订单北京时间">
+                            <el-date-picker type="datetime" v-model="orderDetailInfo.orderTimeCn" readonly></el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="交易ID">
+                            <el-input v-model="orderDetailInfo.platTransactionId" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="币种">
+                            <el-input v-model="orderDetailInfo.platOrderAmt" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="订单金额">
+                            <el-input v-model="orderDetailInfo.platOrderAmt" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="出货仓库">
+                            <el-input v-model="orderDetailInfo.id" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="物流方式">
+                            <el-input v-model="orderDetailInfo.logisTypeName" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="跟踪号">
+                            <el-input v-model="orderDetailInfo.logisTrackingNo" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="买家指定物流">
+                            <el-input v-model="orderDetailInfo.buyerRequireShippingType" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="卖家邮箱">
+                            <el-input v-model="orderDetailInfo.sellerEmail" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="买家邮箱">
+                            <el-input v-model="orderDetailInfo.buyerEmail" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="买家ID">
+                            <el-input v-model="orderDetailInfo.buyerUserId" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="收件人">
+                            <el-input v-model="orderDetailInfo.shippingUsername" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="收件人电话">
+                            <el-input v-model="orderDetailInfo.shippingPhoneNumber" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="收件人邮箱">
+                            <el-input v-model="orderDetailInfo.shippingZip" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="地址1">
+                            <el-input v-model="orderDetailInfo.shippingStreet1" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="地址2">
+                            <el-input v-model="orderDetailInfo.shippingStreet2" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="城市">
+                            <el-input v-model="orderDetailInfo.shippingCity" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="州/省">
+                            <el-input v-model="orderDetailInfo.shippingState" readonly></el-input>
+                        </el-form-item>
+                        <el-form-item label="国家">
+                            <el-input v-model="orderDetailInfo.shippingCountryCnName" readonly></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-table :data="orderDetailInfo.orderDetails" border :header-cell-style="{background:'rgb(242,242,242)'}">
+                        <el-table-column label="图片" width="100">
+                            <template slot-scope="scope">
+                                <img :src="scope.row.imageUrl" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column property="itemId" label="ListingID" width="100"></el-table-column>
+                        <el-table-column property="storeSSku" label="店铺SKU" width="100"></el-table-column>
+                        <el-table-column property="prodSSku" label="商品SKU" width="100"></el-table-column>
+                        <el-table-column property="stockLocation" label="库位" width="100"></el-table-column>
+                        <el-table-column property="prodTitle" label="商品名称" width="100"></el-table-column>
+                        <el-table-column label="入库要求" width="100"></el-table-column>
+                        <el-table-column property="style" label="款式" width="100"></el-table-column>
+                        <el-table-column property="availableStock" label="可用库存" width="100"></el-table-column>
+                        <el-table-column property="prodUnitCost" label="商品成本(¥)" width="100"></el-table-column>
+                        <el-table-column property="prodUnitWeight" label="净重(g)" width="100"></el-table-column>
+                        <el-table-column property="customsEnName" label="报关信息" width="100"></el-table-column>
+                        <el-table-column property="platOrderDetailStatus" label="订单状态" width="100"></el-table-column>
+                        <el-table-column property="prodQuantity" label="商品数量" width="100"></el-table-column>
+                        <el-table-column property="platOrderDetailAmt" label="销售金额" width="100"></el-table-column>
+                        <el-table-column property="pickUserName" label="配货人" width="100"></el-table-column>
+                        <el-table-column label="配货时间" width="100">
+                            <template slot-scope="scope">
+                                {{ Format(scope.row.pickTime, "yyyy-MM-dd hh:mm:ss") }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column property="declaredValue" label="申报价" width="100"></el-table-column>
+                    </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="日志" name="1">
+                    <el-table :data="logDetailInfo" border style="width: 100%" :header-cell-style="{background:'rgb(242,242,242)'}">
+                        <el-table-column label="时间" property="operTime">
+                            <template slot-scope="scope">
+                                {{ Format(scope.row.operTime, "yyyy-MM-dd hh:mm:ss") }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作人" property="operator"></el-table-column>
+                        <el-table-column label="日志" property="operDesc"></el-table-column>
+                    </el-table>
+                </el-tab-pane>
+              </el-tabs>
+            
+        </el-dialog>
+    </div>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                content: { //详情渲染数据
+                    ebayMsg: {},
+                    msgDialogEbayDtos: [],
+                    msgOrderInfoDtos: [{
+                        nid: 0
+                    }]
+                },
+                problemTypeForm: {
+                    markQuestion: ''
+                },
+                problemTypeArr: [], //问题类型
+                dialogTableVisible: false, //弹框
+                lastObj: {},
+                gridData: [], //日志数组
+                fileList: [], //存放图片数组
+                options: [], //模板接口选项
+                value: '', //模板值
+                imgList: [], //图片模板
+                checked: false,
+                dialogMoreOrderVisible: false, //弹框
+                moreOrderData: [], //更多订单数据
+                activeKey: '0',
+                detailKey: '0',
+                emailList: [],
+                orderList: [],
+                orderInfo: {},
+                isShowDetail: false,
+                isShowRemark: false,
+                orderDetailInfo: {}, // 订单详情
+                logDetailInfo: {}, 
+                remarkTypeList: [],
+                remarkRecordsList: [],
+                remarkForm: {
+                    noteType: '',
+                    noteContent: ''
+                },
+                orderId: '',
+                displayCount: 1,
+
+                loading: false
+
+            },
+            computed: {
+                searchObj () {
+                    let defa = window.location.search.slice(1).split('&');
+                    var result = {};
+                    defa.forEach((item) => {
+                        result[decodeURIComponent(item.split('=')[0])] = decodeURIComponent(item.split('=')[1]);
+                    });
+                    return result;
+                },
+                id () {
+                    return this.searchObj.id
+                },
+                storeAcctId () {
+                    return this.searchObj.storeAcctId
+                },
+                buyer() {
+                    return this.searchObj.buyer
+                },
+                originUrl() {
+                    return window.location.origin + window.location.pathname
+                }
+            },
+            mounted () {
+                this.getDetailInfo(this.id).then(() => {
+                    this.getResponseTxt(this.content.msgDialogEbayDtos);
+                    this.getProblemType();
+                })
+                this.getDetailModel()
+                this.getOrderList()
+                this.getEmailList()
+            },
+            methods: {
+                //更改选中
+                changeSelect (val) {
+                    // console.log(val)
+                    axios({
+                        url: '/lms/emailTemplate/queryTemplateInfoById.html',
+                        method: 'post',
+                        params: {
+                            id: val
+                        },
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    }).then((response) => {
+                        let data = response.data;
+                        if (data.code == '0000') {
+                            this.$refs['dialogBox-response'].innerText = data.data;
+                            this.value = ''
+                        }
+                    })
+                },
+                //请求渲染详情页
+                getDetailInfo (id) {
+                    this.loading = true;
+                    return axios.get(`/lms/ebayMessage/getMsgListByIds.html?idArr=${id}`)
+                        .then((result) => {
+                            if (result.status == '200') {
+                                if (result.data.code == '0000') {
+                                    this.loading = false;
+                                    this.content = result.data.data[0]
+                                    this.checked = this.content.ebayMsg.isDelayReply
+                                    this.gridData = this.content.msgOrderInfoDtos ? this.content.msgOrderInfoDtos[0]?.pTradelogs : [];
+                                }
+                            }
+                        }).catch(err => {
+                            this.loading = false;
+                            console.log(err)
+                        })
+                },
+                //根据gridData请求接口获取回复内容-2021/9/16
+                getResponseTxt (gridData) {
+                    if (gridData.length > 0) {
+                        let lastData = gridData[gridData.length - 1]; //获取最后一条数据
+                        let config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                        if (lastData.msgFromWho == 'buyer') {
+                            this.lastObj = lastData;
+                            axios.post(`/lms/ebayMessage/autoReceive.html`, {
+                                messageId: lastData.id,
+                                messageContent: lastData.msgContent
+                            }, {
+                                transformRequest: [
+                                    function (data) {
+                                        let ret = "";
+                                        for (let it in data) {
+                                            ret +=
+                                                encodeURIComponent(it) +
+                                                "=" +
+                                                encodeURIComponent(data[it]) +
+                                                "&";
+                                        }
+                                        return ret;
+                                    }
+                                ]
+                            }, config).then(res => {
+                                let resData = res.data;
+                                if (resData.code == '0000') {
+                                    let replyContent = resData.data || '';
+                                    if (replyContent.trim()) {
+                                        this.$refs['dialogBox-response'].innerText = replyContent.trim();
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                },
+                //获取问题类型-2021/9/16
+                getProblemType () {
+                    axios.get(`/lms/ebayMessage/questions.html`).then(res => {
+                        let resData = res.data;
+                        if (resData.code == '0000') {
+                            this.problemTypeArr = resData.data || [];
+                        }
+                    })
+                },
+                //提交问题类型
+                problemTypeSubmit () {
+                    let markQuestion = this.problemTypeForm.markQuestion;
+                    let messageId = this.lastObj.id;
+                    if (!markQuestion) {
+                        return this.$notify.error({
+                            title: '错误',
+                            message: '请选择问题分类'
+                        });
+                    };
+                    axios({
+                        method: 'post',
+                        url: '/lms/ebayMessage/markQuestion.html',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        transformRequest: [function (data) {
+                            let ret = "";
+                            for (let it in data) {
+                                ret +=
+                                    encodeURIComponent(it) +
+                                    "=" +
+                                    encodeURIComponent(data[it]) +
+                                    "&";
+                            }
+                            return ret;
+                        }],
+                        data: {
+                            messageId: messageId,
+                            markQuestion: markQuestion
+                        }
+                    }).then(res => {
+                        if (res.data.code == '0000') {
+                            this.$notify({
+                                title: '成功',
+                                message: '提交成功',
+                                type: 'success'
+                            });
+                        }
+                    }).catch(err => {
+                        this.$notify.error({
+                            title: '错误',
+                            message: err
+                        });
+                    })
+                },
+                //提交问题类型-2021/9/16
+                //格式化时间
+                Format (datetime, fmt) {
+                    if (datetime) {
+                        datetime = datetime.toString();
+                        if (parseInt(datetime) == datetime) {
+                            if (datetime.length == 10) {
+                                datetime = parseInt(datetime) * 1000;
+                            } else if (datetime.length == 13) {
+                                datetime = parseInt(datetime);
+                            }
+                        }
+                        datetime = new Date(datetime);
+                        var o = {
+                            "M+": datetime.getMonth() + 1, //月份
+                            "d+": datetime.getDate(), //日
+                            "h+": datetime.getHours(), //小时
+                            "m+": datetime.getMinutes(), //分
+                            "s+": datetime.getSeconds(), //秒
+                            "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度
+                            "S": datetime.getMilliseconds() //毫秒
+                        };
+                        if (/(y+)/.test(fmt))
+                            fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
+                        for (var k in o)
+                            if (new RegExp("(" + k + ")").test(fmt))
+                                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                        return fmt;
+                    } else {
+                        return "";
+                    }
+                },
+                //关闭页面
+                closePage () {
+                    window.close();
+                },
+                //操作日志
+                handleLogs (data) {
+                    this.gridData = data || [];
+                    this.dialogTableVisible = true;
+                },
+                //图片上传成功事件
+                uploadSuccessHandle (response, file, fileList) {
+                    // console.log(response)
+                    if (response.code == '0000') {
+                        const data = response.data
+                        let obj = {
+                            id: data.imgId,
+                            imgName: data.imgName,
+                            status: true
+                        };
+                        this.imgList.push(obj);
+                    }
+                },
+                //图片移除事件
+                uploadRemoveHandle (file, fileList) {
+                    let imgList = this.imgList;
+                    let data = file.response.data;
+                    let id = data.imgId;
+                    let _acData = imgList.find(item => item.id == id);
+                    imgList.splice(imgList.indexOf(_acData), 1);
+                },
+                //请求渲染模板选择
+                getDetailModel () {
+                    axios.get(`/lms/emailTemplate/queryTemplateByPlatCodeAndName.html`, {
+                        params: {
+                            "platCode": "ebay",
+                            "templateTypeName": "msg_reply"
+                        }
+                    }).then((result) => {
+                        if (result.status == '200') {
+                            if (result.data.code == '0000') {
+                                this.options = result.data.data
+                            }
+                        }
+                    })
+                },
+                //点击发送按钮发送信息
+                sendMsgHandle () {
+                    //获取到买家和最后一次买家发送消息的id
+                    let buyers = this.$refs.buyer;
+                    let targetBuyer = buyers[buyers.length - 1];
+                    let idAndName = targetBuyer.firstElementChild.value;
+                    let replyId = idAndName.split('&')[0];
+                    let recipient = idAndName.split('&')[1];
+                    let isDelayReply = this.checked;
+                    //获取到回复框的内容
+                    let replyBoby = this.$refs['dialogBox-response'].innerText;
+                    //图片集合
+                    let msgImgs = this.imgList;
+                    //发送请求
+                    axios.post('/lms/ebayMessage/replyMsg.html', {
+                        id: replyId,
+                        recipient: recipient,
+                        msgImgs: msgImgs,
+                        replyBody: replyBoby,
+                        isDelayReply: isDelayReply
+                    }).then((response) => {
+                        const data = response.data;
+                        if (data.code == '0000') {
+                            this.$message({
+                                message: '回复成功!',
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        } else {
+                            this.$message({
+                                message: data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                },
+                //延迟回复
+                cksChangeHandle (val) {
+                    // console.log(val)
+                    let id = this.id
+                    let storeAcctId = this.storeAcctId
+                    axios.post('/lms/ebayMessage/updateMsgDelayStatus.html', {
+                        id: id,
+                        storeAcctId: storeAcctId,
+                        isDelayReply: val
+                    }).then((response) => {
+                        let data = response.data;
+                        if (data.code == '0000') {
+                            this.$message({
+                                message: data.msg,
+                                type: 'success'
+                            });
+                        } else {
+                            this.$message({
+                                message: data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                },
+                //更多订单
+                handleOrders () {
+                    this.handleOrdersAxios();
+                    this.dialogMoreOrderVisible = true;
+                },
+                //更多订单接口请求
+                handleOrdersAxios () {
+                    let id = this.id
+                    axios.get(`/lms/ebayMessage/getMoreOrderInfos.html?id=${id}`)
+                        .then((result) => {
+                            if (result.data.code == '0000') {
+                                console.log(result.data.data)
+                                this.moreOrderData = result.data.data
+                            }
+                        });
+                },
+                //日志弹框关闭事件
+                handleClose () {
+                    this.gridData = []
+                },
+                //更多订单日志
+                handleClick (data) {
+                    this.gridData = data.pTradelogs || [];
+                    this.dialogTableVisible = true;
+                },
+                // 查询一年内的订单
+                getOrderList() {
+                    axios.get(`/lms/ebayMessage/listHistoryOrderByBuyer?buyer=${this.buyer}&storeAcctId=${this.storeAcctId}`)
+                        .then((result) => {
+                            if (result.data.code == '0000') {
+                                this.orderInfo = result.data.data.splitOrders || result.data.data.resendOrders || result.data.data.mergeOrders || []
+                                this.orderInfo?.forEach(item => {
+                                    if (result.data.data?.splitOrders) {
+                                        item.orderType = 'split'
+                                    }
+                                    if (result.data.data?.resendOrders) {
+                                        item.orderType = 'resend'
+                                    }
+                                    if (result.data.data?.mergeOrders) {
+                                        item.orderType = 'origin'
+                                    }
+                                    item.orderDetails?.forEach(cItem => {
+                                        cItem.platOrderAmt = item.platOrderAmt
+                                        cItem.orderTimePlat = item.orderTimePlat
+                                        cItem.shippingTime = item.shippingTime
+                                        cItem.processStatus = item.processStatus
+                                        cItem.platOrderId = item.platOrderId
+                                    })
+                                    // item.orderDetails.slice(0, this.displayCount)
+                                })
+                                // this.orderList = this.orderInfo.map(item => item.orderDetails).flat(Infinity)
+                            }
+                        });
+                },
+
+                getDetailsData(list) {
+                    return list.slice(0, this.displayCount)
+                },
+
+                handleView(list) {
+                    console.log('jjj')
+                    this.displayCount = list && list.length;
+                    this.getDetailsData(list);
+                },
+
+                handleHide(list) {
+                    this.displayCount = 1;
+                    this.getDetailsData(list);
+                },
+                // 查询一年内的邮件
+                getEmailList() {
+                    axios.get(`/lms/ebayMessage/listHistoryMsgByBuyer?buyer=${this.buyer}&storeAcctId=${this.storeAcctId}`)
+                        .then((result) => {
+                            if (result.data.code == '0000') {
+                                this.emailList = result.data.data
+                            }
+                        });
+                },
+                getStatus (type) {
+                    const status = {
+                        "501":"黑名单订单",
+                        "502":"缺货订单",
+                        "503": "取消订单",
+                        "504": "未付款订单",
+                        "500":"其他异常订单",
+                        "110":"待审核",
+                        "115":"待派单",
+                        "120":"待配货",
+                        "125":"待核单",
+                        "130":"待包装",
+                        "135":"仓库缺货",
+                        "140":"待发货",
+                        "180":"已发货",
+                        "200":"已归档",
+                    }
+                    return status[type]
+                },
+
+                orderRemark(orderId) {
+                    this.orderId = orderId
+                    this.isShowRemark = true
+                    this.getRemarkType()
+                    this.getRemarkRecords()
+                },
+
+                // 获取备注类型
+                getRemarkType() {
+                    axios.get(`/lms/sysdict/getBizDictByCode.html?headCode=PLAT_ORDER_LABEL`)
+                        .then((result) => {
+                            if (result.data.code == '0000') {
+                                this.remarkTypeList = result.data.data
+                            }
+                        });
+                },
+                // 获取备注记录
+                getRemarkRecords() {
+                    axios.get(`/lms/unauditorder/getlabelbyorderId.html?orderId=${this.orderId}`)
+                        .then((result) => {
+                            if (result.data.code == '0000') {
+                                this.remarkRecordsList = result.data.data
+                            }
+                        });
+                },
+                // 订单备注
+                handleRemark() {
+                    let formdata = new FormData()
+                    formdata.append('ids', this.orderId || '')
+                    formdata.append('noteType', this.remarkForm.noteType)
+                    formdata.append('noteContent', this.remarkForm.noteContent)
+
+                    axios.post('/lms/unauditorder/addorderlabelnote.html', formdata).then((response) => {
+                        const data = response.data;
+                        if (data.code == '0000') {
+                            this.$message({
+                                message: '操作成功!',
+                                type: 'success'
+                            });
+                        } else {
+                            this.$message({
+                                message: data.msg,
+                                type: 'error'
+                            });
+                        }
+                        this.isShowRemark = false
+                    }).catch(err => {
+                        console.log(err)
+                        this.isShowRemark = false
+                    })
+                },
+
+                // 获取订单详情
+                getOrderDetails(id) {
+                    this.orderId = id
+                    this.isShowDetail = true
+                    axios.post('/lms/ebayMessage/listOrderByOrderIdList', [id]).then((response) => {
+                        const data = response.data;
+                        if (data.code == '0000') {
+                            this.orderDetailInfo = data.data[0] || {}
+                        }
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                },
+
+                // 获取日志详情
+                getLogDetail() {
+                    let formdata = new FormData()
+                    formdata.append('orderId', this.orderId)
+                    axios.post('/lms/orderlog/listorderlog.html', formdata).then((response) => {
+                        const data = response.data;
+                        if (data.code == '0000') {
+                            this.logDetailInfo = data.data || {}
+                        }
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                },
+
+                handleClickDetail() {
+                    if (this.detailKey === '1') {
+                        // 获取日志
+                        this.getLogDetail()
+                    }
+                },
+
+                handleCopy(value) {
+                    var input = document.createElement('input'); // 创建input对象
+                    input.value = value; // 设置复制内容
+                    document.body.appendChild(input); // 添加临时实例
+                    input.select(); // 选择实例内容
+                    document.execCommand('Copy'); // 执行复制
+                    document.body.removeChild(input); // 删除临时实例
+                    this.$message.success('复制成功')
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

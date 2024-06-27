@@ -1,0 +1,150 @@
+[v-cloak] {
+    display: none;
+}
+
+.wishticket_active {
+    background-color: #f2f2f2;
+}
+
+.wishticket_left,
+.wishticket_right {
+    border-right: 1px solid #eee;
+    border-left: 1px solid #eee;
+}
+
+.wishticket_left {
+    height: calc(100vh - 320px);
+    overflow-y: auto;
+}
+
+.wishticket_title {
+    height: 40px;
+    line-height: 30px;
+    padding: 0 5px;
+}
+
+.wishticket_item li {
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.wishticket_item .wishticket_timeout {
+    position: absolute;
+    bottom: 1px;
+    color: #fff;
+    background-color: #f00;
+    padding: 0 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    margin-left: 12px;
+}
+
+.wishticket_item li>div:first-child {
+    height: 114px;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+}
+
+.wishticket_item li:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.wishticket_item li p {
+    height: 30px;
+    line-height: 30px;
+}
+
+.wishticket_item li p span {
+    color: #000;
+}
+
+.wishticket_item li .wishticket_item_title {
+    flex: 1;
+    width: 0;
+}
+
+.wishticket_item li .wishticket_item_title p:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.wishticket_item li .wishticket_item_title p:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* 对话框 */
+
+.wishticket_dialogBox {
+    background-color: #fff;
+    box-shadow: 0 0 5px 0 rgba(0, 34, 77, 0.3);
+}
+
+
+/* 对话框头部样式 */
+
+.wishticket_dialogBox_header {
+    height: 42px;
+    line-height: 42px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.wishticket_dialogBox_header>.dialogBox-header-sender {
+    font-weight: bold;
+    vertical-align: middle;
+    color: #428bca;
+}
+
+.wishticket_dialogBox_header>.dialogBox-header-store {
+    color: #a0a3a6;
+}
+
+
+/* 对话框内容 */
+
+.wishticket_dialogBox_content {
+    height: calc(100vh - 550px);
+    box-sizing: border-box;
+    border-bottom: 1px solid #e8e8e8;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+
+/* 对话框工具条 */
+
+.wishticket_dialogBox_tool {
+    height: 42px;
+    line-height: 42px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e8e8e8;
+    background-color: #f2f2f2;
+    display: flex;
+    /* justify-content: flex-end; */
+}
+
+
+/* 对话框回复 */
+
+.wishticket_dialogBox_response {
+    height: 126px;
+    padding: 10px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    /*自动换行 */
+    overflow-y: auto;
+    outline: none;
+}
+
+.wishticket_message {
+    margin: 10px 5px;
+    border: 1px solid #eee;
+    padding: 10px;
+}

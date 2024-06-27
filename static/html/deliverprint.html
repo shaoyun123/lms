@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发货单打印</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <script src="../vue/js/JsBarcode.all.min.js"></script>
+    <style>
+        #app{
+            width: 900px;
+            margin: 0 auto;
+            font-family: '宋体';
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+            padding-left: 20px;
+        }
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+        }
+        .el-table{
+            font-size: 14px;
+        }
+        .el-table th{
+            text-align: center;
+        }
+        .el-table td{
+            text-align: center;
+        }
+        .el-table__header tr {
+            padding: 0;
+            line-height: 70px;
+        }
+        .el-table__header th {
+            padding: 0;
+            line-height: 40px;
+        }
+        .el-aside{
+            line-height: 25px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+            font-family: '宋体';
+        }
+        .el-table td, .el-table th{
+            padding: 0px;
+        }
+        .el-table .cell {
+            line-height: 35px;
+            padding: 0px;
+        }
+        .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+            padding: 0px;
+        }
+        table tr th,
+        table tr td {
+            border: 1px solid black;
+        }
+        .el-table thead {
+            color: #333;
+
+        }
+        .el-table__footer-wrapper tbody td, .el-table__header-wrapper tbody td {
+            background-color: #fff !important;
+        }
+        .el-table__footer-wrapper td {
+            border-top: 1px solid #000 !important;
+        }
+    </style>
+</head>
+<body>
+        <div id="app" >
+            <el-main >
+                <el-header style="font-size: 32px;">发货单</el-header>
+                <el-container>
+                    <el-aside style="width: 430px;">
+                        <el-row>
+                            <el-col :span="5">
+                                <div class="grid-content bg-purple-dark">发货单：</div>
+                            </el-col>
+                            <el-col :span="16">
+                                <div class="grid-content bg-purple-dark"><svg id="barcode_invoiceNo"></svg></div>
+                            </el-col>
+                        </el-row>
+                    </el-aside>
+                    <el-aside style="width:430px;">
+                        <el-row>
+                            <el-col :span="5" >
+                                <div class="grid-content bg-purple-dark">货代公司：</div>
+                            </el-col>
+                            <el-col :span="16" style="font-size: 25px;">
+                                <div class="grid-content bg-purple-dark"><b>{{agentCompany}}</b></div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                             <el-col :span="5">
+                                 <div class="grid-content bg-purple-dark">发货时间：</div>
+                             </el-col>
+                            <el-col :span="16">
+                                <div class="grid-content bg-purple-dark">{{createTime}}</div>
+                            </el-col>
+                        </el-row>
+                    </el-aside>
+                </el-container>
+                <el-container>
+                    <el-main style="padding: 0px;    border-right: 1px solid">
+                        <el-table :data="detailList" border  style="text-align: center;" >
+                            <el-table-column type="index"  label="序号"  width="150"></el-table-column>
+                            <el-table-column prop="packageNo" label="包裹号" ></el-table-column>
+                            <el-table-column prop="packageWeight"  label="重量（kg）"></el-table-column>
+                        </el-table>
+
+                        <div class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition" style="text-align: center;">
+                            <div class="el-table__body-wrapper is-scrolling-none">
+                                <table cellspacing="0" cellpadding="0"  class="el-table__body" style="border-bottom: 1px solid;margin-bottom: 1px;" >
+                                    <tr class="el-table__row ">
+                                        <td rowspan="1" colspan="1" ><div class="cell" style="width: 148px">合计</div></td>
+                                        <td rowspan="1" colspan="1" ><div class="cell" style="width: 352px">共{{totalPackageNO}}个包裹</div></td>
+                                        <td rowspan="1" colspan="1" ><div class="cell" style="width: 352px">{{totalWeight}}</div></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </el-main>
+                </el-container>
+
+
+                <el-container >
+                    <el-aside style="width: 580px;"></el-aside>
+                    <el-aside style="width:280px; line-height: 40px;padding: 20px;">
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-dark">发货人：</div>
+                        </el-col>
+                        <el-col :span="10">
+                            <div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-dark">提货人：</div>
+                        </el-col>
+                        <el-col :span="10">
+                            <div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div>
+                        </el-col>
+                    </el-aside>
+                </el-container>
+                </el-container>
+            </el-main>
+        </div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                invoiceNo:'',
+                agentCompany:'',
+                createTime:'',
+                totalWeight:'',
+                totalPackageNO:'',
+                detailList:[],
+            }
+        },
+        created: function () {
+
+        },
+        mounted:function(){
+            const searchStr=window.location.search;
+            console.log("xxx",searchStr);
+            /**获取采购入库订单号*/
+            const id=searchStr.substring(searchStr.indexOf("=")+1);
+            console.log("id",id)
+            /**根据采购入库订单号，获取入库详情，生成打印页面*/
+            this.$http.get('../../warehouse/invoice/queryAllInvoiceById.html?id='+id,{emulateJSON:true}).then(function(res){
+                            var resData=res.body;
+                            if(resData.code=="0000"){
+                                var rdata=resData.data;
+                                this.invoiceNo=rdata.invoiceNo;
+                                this.agentCompany=rdata.agentCompany;
+                                this.createTime=rdata.createTime;
+                                this.totalWeight=rdata.totalWeight;
+                                this.totalPackageNO=rdata.totalPackageNO;
+                                this.detailList=rdata.detailList;
+                                console.log(this.detailList)
+                                this.$nextTick(function(){
+                                    $("#barcode_invoiceNo").JsBarcode(rdata.invoiceNo,{width:1.5,height:40,margin: 3,fontSize:14,textMargin:1});
+                                    window.print();
+                                });
+                            }else{
+                                alert(resData.msg);
+                            }
+                       },function(res){
+                            alert("打印页面加载失败");
+                   });
+        },
+        methods:{
+
+        }
+    });
+</script>
+</body>
+</html>

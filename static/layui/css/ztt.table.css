@@ -1,0 +1,432 @@
+.ztt-table {
+  width: 100%;
+  background-color: #fff;
+  color: #666;
+  text-align: center;
+  border-collapse: collapse;
+  display: block;
+  border-spacing: 0px;
+  display: block;
+}
+.ztt-table>thead {
+  display: block;
+  background-color: #f2f2f2;
+  color: #666666;
+}
+.ztt-table>thead>tr{
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  box-sizing: border-box;
+}
+.ztt-table>tbody>tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  box-sizing: border-box;
+  height: 68px !important;
+  line-height: 68px !important;
+}
+.ztt-table>thead>tr>th {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border: 1px solid gray;
+}
+.ztt-table>tbody>tr>td {
+  height: 50px;
+  text-align: center;
+  border: 1px solid gray;
+  border-top: none;
+}
+.ztt-table>tbody{
+  display: block;
+  width: calc(100% + 8px); /*这里的8px是滚动条的宽度*/
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  max-height: 700px;
+  height: calc(100% - 200px);
+}
+.ztt-table caption {
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 50px;
+}
+/* 滚动条宽度 */
+#waittopack_distributeLayerId ::-webkit-scrollbar,
+#waittopack_multiShotBasketballLayerId ::-webkit-scrollbar,
+#waittopack_lackShotBasketballLayerId ::-webkit-scrollbar   {
+  width: 8px;
+  background-color: transparent;
+}
+/* 滚动条颜色 */
+#waittopack_distributeLayerId ::-webkit-scrollbar-thumb,
+#waittopack_multiShotBasketballLayerId ::-webkit-scrollbar-thumb,
+#waittopack_lackShotBasketballLayerId ::-webkit-scrollbar-thumb{
+  background-color: #e6e6e6;
+}
+
+.ztt-table .td5 {
+  width: 5%;
+}
+.ztt-table .td35 {
+  width: 35%;
+  position: relative;
+}
+.ztt-table .td20 {
+  width: 20%;
+}
+.ztt-table .td10 {
+  width: 10%;
+}
+
+
+
+.dis_flex_space {
+  display: flex;
+  justify-content: space-between;
+}
+.externalContainAuditorder {
+  position: relative;
+  width: 0;
+  float: left;
+  height: 0;
+  z-index: 20190918;
+}
+.externalPopAuditorder {
+  clear: left;
+  position: relative;
+  left: -35.667vw;
+  top: 60px;
+  width: 35vw;
+  border: 1px solid #e6e6e6;
+  background-color: lightyellow;
+  padding: 20px 0;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px grey;
+}
+
+.externalBox {
+  width: 85%;
+  line-height: 32px;
+  text-align: center;
+  border: 1px solid #e6e6e6;
+  margin-left: 15%;
+  cursor: pointer;
+}
+
+.externalBox:hover {
+  border: 1px solid grey;
+}
+.gray {
+  color: gray;
+}
+/* 配货样式 */
+#waittopack_distributeLayerId {
+  overflow: hidden;
+}
+.waittopack-setBigFont {
+  display: block;
+  font-size: 30px;
+  color: #000;
+}
+#waittopack_distributeLayerId>.title {
+  height: 40px;
+  line-height: 40px;
+  font-weight: 900;
+  font-size: 22px;
+  color: #000;
+  padding-left: 16px;
+}
+#waittopack_distributeLayerId>.distributeContainer {
+  display: flex;
+  height: 100%;
+}
+.distributeContainer-form {
+  width: 400px;
+  position: fixed;
+  right: 25px;
+  top: 50px;
+  box-sizing: border-box;
+  padding: 5px;
+  box-shadow: 2px 2px 5px 5px #ccc;
+  border-radius: 8px;
+}
+.distributeContainer-table {
+  margin-left:20px;
+  width: calc(100% - 500px)!important;
+}
+/* .distributeContainer-table table,
+.distributeContainer-table thead,
+.distributeContainer-table tbody {
+display: block;
+}
+.distributeContainer-table thead>tr,
+.distributeContainer-table tbody>tr {
+  display:table;
+  width:100%;
+  table-layout:fixed;
+} */
+/* .distributeContainer-table thead {
+  width: calc( 100% - 17px );
+}
+#distributeContainer_tableTbody {
+  overflow-y: auto;
+  overflow-x:hidden;
+  max-height: 700px;
+  height: calc(100% - 200px);
+} */
+#distributeContainer_tableTbody>tr.handledTr .waittopack-setBigFont,
+#distributeContainer_tableTbody>tr.handledTr .waittopack_packageProdName {
+  color: #fff;
+}
+#distributeContainer_tableTbody>tr.lackHandledTr .waittopack-setBigFont,
+#distributeContainer_tableTbody>tr.lackHandledTr .waittopack_packageProdName {
+  color: #EE4000;
+}
+#distributeContainer_tableTbody>tr.unHandledTr .waittopack-setBigFont:hover {
+  color: #000;
+}
+/* #distributeContainer_tableTbody td{
+  height: 40px;
+  line-height: 40px;
+  line-height: 24px;
+  text-align: center;
+  font-size: 15px;
+} */
+/* 当前选中 */
+.selectTr {
+  position: relative;
+}
+.selectTr::before {
+  content: '';
+  left: -30px;
+  top: 100px;
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background: linear-gradient(135deg, red 0%,red 50%,transparent 50%,transparent 100%);
+  transform: rotate(135deg);
+}
+/* .waittopack_packageProdName {
+  position: absolute;
+  color: #000;
+  right: 10px;
+  top: 30px;
+} */
+/* 已处理 */
+.unHandledTr {
+  background: #F0F8FF;
+  color: #000;
+}
+/* 未处理 */
+.handledTr {
+  background: #1874CD;
+  color: #fff;
+}
+.lackHandledTr {
+  background: #1874CD;
+  color: #EE4000;
+}
+#distributeContainer_tableTbody>tr.unHandledTr:hover{
+  background: #F0F8FF;
+  color: #000;
+}
+#distributeContainer_tableTbody>tr.handledTr:hover{
+  background: #1874CD;
+  color: #fff;
+}
+#distributeContainer_tableTbody>tr.lackHandledTr:hover{
+  background: #1874CD;
+  color: #EE4000;
+}
+/* 箱号数量 */
+.boxStyle {
+ font-size: 40px;
+ color: #0000FF;
+}
+.layui-icon-layer {
+  height: 32px;
+  line-height: 32px;
+  margin-left:5px;
+  cursor:pointer;
+}
+/* 单品包装样式start */
+#waittopack_singlePackageLayerId .singlePackage_right,
+#waittopack_multiPackageLayerId .multiPackage_right,
+#waittopack_multiShotBasketballLayerId .waittopack_app_right,
+#waittopack_lackShotBasketballLayerId .waittopack_app_right{
+  width: 420px;
+  height: 80%;
+  position: fixed;
+  right: 25px;
+  top: 80px;
+  box-sizing: border-box;
+  padding: 5px;
+  box-shadow: 2px 2px 5px 5px #ccc;
+}
+#waittopack_multiShotBasketballLayerId .waittopack_app_right {
+  padding: 40px 15px;
+}
+.waittopack_titleContainer
+{
+  margin-left: 60%;
+  position: absolute;
+  top: 0;
+}
+.waittopack_titleShowName{
+  margin-left: 85%;
+  position: absolute;
+  top: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.waittopack_titleStatistics {
+  margin-left: 70%;
+  position: absolute;
+  top: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.waittopack_titleContainer>span {
+  margin: 0 10px;
+}
+/* 单品包装样式end */
+/* 多批次配货样式start */
+table.multiDistributeTable_colspantable{
+  border: 0px;
+  width:408px !important;
+}
+#multiDistribute_table_pickerLayerId {
+  overflow: visible !important;
+}
+/* 多批次配货样式end */
+/* 多品投篮start */
+.waittopack_app_header {
+  display:flex;
+  height: 40px;
+  line-height: 40px;
+}
+.waittopack_app_tableContainer {
+  display:flex;
+  flex-wrap: wrap;
+}
+.waittopack_app_table{
+  width: 48%;
+  box-sizing: border-box;
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+/* .waittopack_app_table .layui-table{
+  height: 40vh;
+  overflow-y: auto;
+} */
+.waittopack_app_table .layui-table thead,
+.waittopack_app_table .layui-table tbody,
+.waittopack_app_table .layui-table  tr{
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}
+.waittopack_app_table .layui-table thead {
+  width: calc( 100% - 8px);
+}
+.waittopack_app_table .layui-table tbody {
+  display:block;
+  height:40vh;
+  overflow-y:scroll;
+  overflow-x: hidden;
+}
+.waittopack_app_table_header{
+  display:flex;
+  justify-content:space-between;
+  padding-right: 15px;
+}
+/* 多品投篮end */
+/* 单品包装双击选中 */
+.dblSelected {
+  background: #20B2AA;
+  color: #fff;
+}
+#singlePackage_left_tbody>tr.dblSelected:hover,
+#multiPackage_left_tbody>tr.dblSelected:hover
+{
+  background-color: #20B2AA !important;
+  color: #fff;
+}
+.dblSelected:hover{
+  background-color: #20B2AA;
+  color: #fff;
+}
+.hlh100{
+  height: 100px;
+  line-height: 100px;
+  font-size: 100px;
+  color: #0071f9;
+}
+.hlh50 {
+  line-height: 50px;
+  font-size: 36px;
+  height: 80px;
+  color: #EE0000;
+}
+/* #distributeContainer_tableTbody> tr {
+  height: 68px !important;
+  line-height: 68px !important;
+} */
+.sortIconClass {
+  cursor: pointer;
+  color: #ccc;
+}
+.sortIconClass>.layui-icon {
+  font-size: 10px;
+}
+.layui-icon-active {
+  color: #000;
+}
+.multiNoProdRed {
+  background-color: red;
+  padding: 10px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 20px;
+  text-align: center;
+}
+#waittopack_setLayer_page .layui-table-page>div {
+  width: 80% !important;
+}
+#waittopack_showPartitionRemainingDom {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  color: #b3b3b3;
+  transform: translateX(-50%);
+  font-size: 18px;
+}
+/* #waittopack_showPartitionRemainingDom i {
+  font-weight: 700;
+} */
+
+.waittopack-noteContent-tag{
+  color:#008B8B;
+  border: 1px solid #008B8B;
+  background-color: #fff;
+}
+.waittopack-hasBasketNumBg {
+  background: aquamarine;
+}
+
+#waittopack_multiShotBasketballLayer_markReduceContainer .tdGrow {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f00;
+}
+
+.waittopack_app_tableContainer td,
+.waittopack_app_tableContainer th {
+  padding: 4px;
+}
+.waittopack_app_tableContainer .waittopack_app_table .orderNumTd {
+  font-size: 12px !important;
+}

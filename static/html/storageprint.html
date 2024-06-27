@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>采购入库单打印</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <script src="../vue/js/JsBarcode.all.min.js"></script>
+    <style>
+        #app{
+            width: 900px;
+            margin: 0 auto;
+            font-family: '宋体';
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+            padding-left: 20px;
+        }
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+        }
+        .el-table{
+            font-size: 14px;
+        }
+        .el-table th{
+            text-align: center;
+        }
+        .el-table td{
+            text-align: center;
+        }
+        .el-table__header tr {
+            padding: 0;
+            line-height: 70px;
+        }
+        .el-table__header th {
+            padding: 0;
+            line-height: 40px;
+        }
+        .el-aside{
+            line-height: 25px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+            font-family: '宋体';
+        }
+        .el-table td, .el-table th{
+            padding: 0px;
+        }
+        .el-table .cell {
+            line-height: 35px;
+            padding: 0px;
+        }
+        .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+            padding: 0px;
+        }
+        table tr th,
+        table tr td {
+            border: 1px solid black
+        }
+        .el-table thead {
+            color: #333;
+
+        }
+    </style>
+</head>
+<body>
+        <div id="app" >
+            <div style="page-break-after: right" v-for="one in storageList">
+                <el-container >
+                    <el-header style="font-size: 32px;">采购入库单</el-header>
+                    <el-container>
+                        <el-aside style="width: 500px;">
+                            <el-row>
+                                <el-col :span="8"><div class="grid-content bg-purple-dark">采购入库单 ：</div></el-col>
+                                <el-col :span="16">
+                                    <div class="grid-content bg-purple-dark"><svg :id="'barcode_storageNumber_'+one.id"></svg></div>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="8"><div class="grid-content bg-purple-dark">采购人员 ：</div></el-col>
+                                <el-col :span="16"><div class="grid-content bg-purple-dark">{{one.buyer}}</div></el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="8"><div class="grid-content bg-purple-dark">入库仓库 ：</div></el-col>
+                                <el-col :span="16"><div class="grid-content bg-purple-dark">{{one.warehouseName}}</div></el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="8"><div class="grid-content bg-purple-dark">供应商 :</div></el-col>
+                                <el-col :span="16"><div class="grid-content bg-purple-dark">{{one.supplierName}}</div></el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="8"><div class="grid-content bg-purple-dark">采购订单号 ：</div></el-col>
+                                <el-col :span="16"><div class="grid-content bg-purple-dark"><svg :id="'barcode_mainBillNumber_'+one.id"></svg></div></el-col>
+                            </el-row>
+                        </el-aside>
+                        <el-aside style="width:400px;">
+                            <el-col :span="6"><div class="grid-content bg-purple-dark">跟踪号：</div></el-col>
+                            <el-col :span="18"><div class="grid-content bg-purple-dark"><svg :id="'barcode_logisticOrderNo_'+one.id"></svg></div></el-col>
+                        </el-aside>
+                    </el-container>
+                    <el-container>
+                        <el-main style="padding: 0px;    border-right: 1px solid">
+                            <el-table :data="one.detailDtos" border style="text-align: center;">
+                                <el-table-column  label="图片" width="80" height="40">
+                                    <template scope="scope"><img :src="scope.row.image"  width="70px;" height="60px;" style="padding-top: 8px;"></template>
+                                </el-table-column>
+                                <el-table-column prop="prodSSku" label="SKU码" width="140"></el-table-column>
+                                <el-table-column prop="title" label="标题"  width="120" ></el-table-column>
+                                <el-table-column prop="purchaseChannel"  label="简称"></el-table-column>
+                                <el-table-column prop="style" width="80" label="款式"></el-table-column>
+                                <el-table-column prop="unit" width="60" label="单位"></el-table-column>
+                                <el-table-column prop="stockLocation" width="110" label="库位"></el-table-column>
+                                <el-table-column prop="buyerPrice" width="80" label="价格(¥)"></el-table-column>
+                                <el-table-column prop="storageNum" width="60" label="数量"></el-table-column>
+                                <el-table-column prop="storageMoney" width="80" label="金额(¥)"></el-table-column>
+                            </el-table>
+                            <div class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition" style="text-align: center;">
+                                <div class="el-table__body-wrapper is-scrolling-none">
+                                    <table cellspacing="0" cellpadding="0"  class="el-table__body" style="border-bottom: 1px solid;margin-bottom: 1px;" >
+                                        <tr class="el-table__row">
+                                            <td rowspan="2" colspan="1" width="80"><div class="cell">内部标签</div></td>
+                                            <td rowspan="2" colspan="1" width="265"><div class="cell">{{one.internalLabel}}</div></td>
+                                            <td rowspan="1" colspan="1" width="340"><div class="cell">合计</div></td>
+                                            <td rowspan="1" colspan="1" width="80"><div class="cell"></div></td>
+                                            <td rowspan="1" colspan="1" width="60"><div class="cell">{{one.totalStorageNum}}</div></td>
+                                            <td rowspan="1" colspan="1" width="80"><div class="cell">{{one.totalStorageMoney}}</div></td>
+                                        </tr>
+                                        <tr class="el-table__row">
+                                            <td rowspan="1" colspan="1" ><div class="cell">运费(¥)</div></td>
+                                            <td rowspan="1" colspan="3"><div class="cell">{{one.logisticFee}}</div></td>
+                                        </tr>
+                                        <tr class="el-table__row">
+                                            <td rowspan="2" colspan="1" ><div class="cell">备注</div></td>
+                                            <td rowspan="2" colspan="1" ><div class="cell">{{one.remark}}</div></td>
+                                            <td rowspan="1" colspan="1" ><div class="cell">总计(¥)</div></td>
+                                            <td rowspan="1" colspan="3" ><div class="cell">{{one.allMoney}}</div></td>
+                                        </tr>
+                                        <tr class="el-table__row">
+                                            <td rowspan="1" colspan="1" ><div class="cell">预付款(¥)</div></td>
+                                            <td rowspan="1" colspan="3"><div class="cell">{{one.prevPayMoney}}</div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </el-main>
+                    </el-container>
+                    <el-container >
+                        <el-aside style="width: 600px;"></el-aside>
+                        <el-aside style="width:300px; line-height: 40px;padding: 20px;" >
+                            <el-col :span="12"><div class="grid-content bg-purple-dark">送签时间：</div></el-col>
+                            <el-col :span="10"><div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div></el-col>
+                            <el-col :span="12"><div class="grid-content bg-purple-dark">送签人：</div></el-col>
+                            <el-col :span="10"><div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div></el-col>
+                            <el-col :span="12"><div class="grid-content bg-purple-dark">签收人：</div></el-col>
+                            <el-col :span="10"><div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div></el-col>
+                            <el-col :span="12"><div class="grid-content bg-purple-dark">确认数量：</div></el-col>
+                            <el-col :span="10"><div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div></el-col>
+                            <el-col :span="12"><div class="grid-content bg-purple-dark">上架人：</div></el-col>
+                            <el-col :span="10"><div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div></el-col>
+                        </el-aside>
+                    </el-container>
+                </el-container>
+            </div>
+
+        </div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                storageList:[],//多个入库单
+            }
+        },
+        created: function () {
+
+        },
+        mounted:function(){
+            const searchStr=window.location.search;
+            /**获取采购入库订单号*/
+            const storageNumber=searchStr.substring(searchStr.indexOf("=")+1);
+            /**根据采购入库订单号，获取入库详情，生成打印页面*/
+            this.$http.post('../../purOrderStorage/getPurOrderStorageForPrintByStorageNumber.html', {storageNumber:storageNumber},{emulateJSON:true}).then(function(res){
+                            var resData=res.body;
+                            if(resData.code=="0000"){
+                                this.storageList=resData.data;
+                                this.$nextTick(function(){
+                                    for(var index in this.storageList){
+                                        var obj=this.storageList[index];
+                                        $("#barcode_storageNumber_"+obj.id).JsBarcode(obj.storageNumber,{width:1.5,height:40,margin: 3,fontSize:14,textMargin:1});
+                                        $("#barcode_mainBillNumber_"+obj.id).JsBarcode(obj.mainBillNumber,{width:1.2,height:40,margin: 3,fontSize:14,textMargin:1});
+                                        $("#barcode_logisticOrderNo_"+obj.id).JsBarcode(obj.logisticOrderNo,{width:1.2,height:40,margin: 3,fontSize:14,textMargin:1});
+                                    }
+                                    window.print();
+                                });
+                            }else{
+                                alert(resData.msg);
+                            }
+                       },function(res){
+                            alert("打印页面加载失败");
+                   });
+        },
+        methods:{
+
+        }
+    });
+</script>
+</body>
+</html>

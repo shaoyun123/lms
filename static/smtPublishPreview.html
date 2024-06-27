@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>速卖通详情描述</title>
+    <script src="./jquery.js"></script>
+    <script src="./layui/layui.all.js"></script>
+</head>
+<style>
+    .devicePhoneClass {
+        margin: 0 auto;
+        background: #eee;
+        padding: 5px;
+        width: 375px;
+    }
+
+    .previewClass {
+        width: 60%;
+        padding: 20px;
+    }
+
+    .previewClass .title {
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .el-row {
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .w100 {
+        width: 100%;
+    }
+
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+
+    .previewClass .textTitleClass {
+        font-size: 16px;
+        color: #333;
+        line-height: 30px;
+        white-space: pre-line;
+    }
+
+    .previewClass .textClass {
+        font-size: 14px;
+        line-height: 25px;
+        color: #333;
+        white-space: pre-line;
+    }
+
+    .devicePhoneImg {
+        width: 100% !important;
+        height: auto;
+    }
+
+    .taCenter {
+        width: 80%;
+        margin-left: 10%;
+    }
+</style>
+
+<body>
+    <div class="smt_publish_preview">
+        <div id="smt_publish_preview_detail"></div>
+    </div>
+    <script type="text/html" id="smt_publish_preview_detail_tpl">
+    <div class="previewClass">
+        <div class="{{d.deviceType == 1 ? 'devicePhoneClass':''}}">
+            <div class="title el-row">
+                <div class="w100 bg-purple-dark">速卖通详情描述</div>
+            </div>
+            {{# layui.each(d.moduleDatas.moduleList,function(inedx,item){ }}
+                <div class="rowFlexClass">
+                    <div class="taCenter">
+                        {{# if(item.type == 'text'){ }}
+                        <div>
+                            {{# layui.each(item.texts,function(elemIndex,elem){ }}
+                                {{# if(elem.class == 'title'){ }}
+                                <div class="textTitleClass">{{elem.content}}</div>
+                                {{# }  }}
+                                {{# if(elem.class == 'body'){ }}
+                                <div class="textClass">{{elem.content}}</div>
+                                {{# } }}
+                            {{# }) }}   
+                        </div>
+                        {{# }else if(item.type == 'image'){ }}
+                            <div>
+                                {{# layui.each(item.images,function(elemIndex,elem){ }}
+                                    <div onclick="imgJumpUrl(this)" data-targetUrl="{{elem.targetUrl || ''}}">
+                                        <img src="{{elem.url}}" alt="" class="devicePhoneImg">
+                                    </div>
+                                {{# }) }}
+                            </div>
+                        {{# }else if(item.type == 'text-image'){ }}
+                        <div>
+                            {{# layui.each(item.texts,function(elemIndex,elem){ }}
+                                {{# if(elem.class == 'title'){ }}
+                                <div class="textTitleClass">{{elem.content}}</div>
+                                {{# }  }}
+                                {{# if(elem.class == 'body'){ }}
+                                <div class="textClass">{{elem.content}}</div>
+                                {{# } }}
+                            {{# }) }}
+                        </div>
+                        <div>
+                            {{# layui.each(item.images,function(elemIndex,elem){ }}
+                                <div onclick="imgJumpUrl(this)" data-targetUrl="{{elem.targetUrl || ''}}">
+                                    <img src="{{elem.url}}" alt="" class="devicePhoneImg">
+                                </div>
+                            {{# }) }}
+                        </div>
+                        {{#  } }}
+                    </div>
+                </div>
+            {{#  }) }}
+        </div>
+    </div>
+    </script>
+    <script type="text/javascript">
+        layui.use(['laytpl'], function () {
+            var laytpl = layui.laytpl
+            let data = JSON.parse(window.localStorage["priviewSmtData"])
+            let getTplLinkage = smt_publish_preview_detail_tpl.innerHTML
+            let viewLinkage = document.getElementById('smt_publish_preview_detail')
+            laytpl(getTplLinkage).render(data, function (html) {
+                viewLinkage.innerHTML = html
+            })
+        })
+        // 图片跳转url
+        function imgJumpUrl(dom) {
+            let url = $(dom).attr('data-targetUrl')
+            !!url && window.open(url)
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+{
+    "code": 0,
+    "msg": "获取数据成功",
+    "count": 10,
+    "data": [
+        {
+            "id": 10000,
+            "storename": "user-0"
+        },
+        {
+            "id": 10001,
+            "storename": "user-1"
+        },
+        {
+            "id": 10002,
+            "storename": "user-2"
+        },
+        {
+            "id": 10003,
+            "storename": "user-3"
+        },
+        {
+            "id": 10004,
+            "storename": "user-4"
+        },
+        {
+            "id": 10005,
+            "storename": "user-5"
+        },
+        {
+            "id": 10006,
+            "storename": "user-6"
+        },
+        {
+            "id": 10007,
+            "storename": "user-7"
+        },
+        {
+            "id": 10008,
+            "storename": "user-8"
+        },
+        {
+            "id": 10009,
+            "storename": "user-9"
+        }
+    ]
+}

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打印交接单</title>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <script src="../vue/js/axios.min.js"></script>
+    <script src="../vue/js/JsBarcode.all.min.js"></script>
+    <style>
+        #handoverApp {
+            width: 600px;
+            /* height: 500px; */
+            /* background-color: #e8e8e8; */
+            margin: 0 auto;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        #handoverApp > h1 {
+            margin: 0 auto;
+            width: 200px;
+            text-align: center;
+            margin-bottom: 5px;
+            line-height: 30px;
+        }
+        #handoverApp div {
+            font-size: 22px;
+        }
+        #handoverApp > .deliverDate {
+            display: flex;
+        }
+        .handoverMl20 {
+            margin-left: 20px;
+        }
+        .handoverContain {
+            line-height: 35px;
+        }
+        #handoverApp>.sortCode {
+            font-size: 28px;
+        }
+        #handoverApp .batchNo{
+            position: absolute;
+            right: 160px;
+            font-size: 32px;
+            top: 360px;
+        }
+    </style>
+</head>
+<body>
+    <div id="handoverApp">
+        <h1>交接单</h1>
+        <div class="bagNo handoverContain">
+            <span>口袋编号:</span>
+            <span class="handoverMl20">{{data.bagNo}}</span>
+        </div>
+        <div class="deliverDate handoverContain">
+            <span>发货日期:</span>
+            <span class="handoverMl20">{{data.createTimeStr}}</span>
+        </div>
+        <div class="logisCompany handoverContain">
+            <span>物流公司:</span>
+            <span class="handoverMl20">{{data.logisCompany}}</span>
+        </div>
+        <div class="logisWay handoverContain">
+            <div class="logisWay-content">
+                <img id="logisWay-jsBarcode" />
+            </div>
+        </div>
+        <div class="sortCode">
+            <span>分拣码:</span>
+            <span class="handoverMl20">{{data.pickNumber}}</span>
+        </div>
+        <div class="orderNum handoverContain">
+            <span>包裹数量:</span>
+            <span class="handoverMl20">{{data.orderNum}}</span>
+        </div>
+        <div v-if="!data.batchNo" class="batchNo">组包失败</div>
+        <div class="totalWeight handoverContain">
+            <span>总重量:</span>
+            <span class="handoverMl20">{{data.totalWeight}}</span>
+        </div>
+        <div class="sortMouth handoverContain">
+            <span>格口号:</span>
+            <span class="handoverMl20">{{data.sortMouth}}</span>
+        </div>
+    </div>
+    <script>
+    var handoverApp = new Vue({
+        el: '#handoverApp',
+        data(){
+            return {
+                data: {
+                    logisCompany: '',
+                    logisType: '',
+                    platCode: '',
+                    shippingTimeStr: '',
+                    pickNumber: '',
+                    orderNum:'',
+                    totalWeight:'',
+                    sortMouth:'',
+                    batchNo:'',
+                    bagNo:''
+                }
+            }
+        },
+        beforeMount() {
+          this.setDataHandle();
+        },
+        created(){
+            this.JsBarcodeHandle();
+        },
+        methods: {
+            // 处理数据请求
+            setDataHandle(){
+                var batchNo = window.location.search.split('&')[0].split('=')[1];
+                var orderNum = (window.location.search.split('&')[1]).split('=')[1];
+                var totalWeight = (window.location.search.split('&')[2]).split('=')[1];
+                var bagNo = (window.location.search.split('&')[3]).split('=')[1];
+                var ctx = window.location.origin; //主机
+                axios.get(`${ctx}/lms/unshippedorder/gethandoverbatch.html`,{
+                    params: {
+                        batchNo: batchNo || bagNo
+                    }
+                }).then(res => {
+                    var data = res.data.data;
+                    data.orderNum = orderNum;
+                    data.batchNo = batchNo
+                    data.totalWeight = totalWeight;
+                    this.data = data;
+                    setTimeout(function() { window.print(); }, 300);
+                    setTimeout(function() { window.close(); }, 1000);
+                }).catch(err=> {
+                    console.log(err)
+                })
+            },
+            JsBarcodeHandle(){
+                var barcode = document.getElementById('logisWay-jsBarcode');
+                var batchNo = window.location.search.split('&')[0].split('=')[1];
+                var bagNo = (window.location.search.split('&')[3]).split('=')[1];
+                JsBarcode(barcode, batchNo || bagNo,{height:100,margin: 3,fontSize:26,textMargin:1,fontOptions:"bold"});//原生
+            },
+            format(datetime, fmt){
+                if (datetime) {
+                    datetime = datetime.toString();
+                    if (parseInt(datetime) == datetime) {
+                        if (datetime.length == 10) {
+                            datetime = parseInt(datetime) * 1000;
+                        } else if (datetime.length == 13) {
+                            datetime = parseInt(datetime);
+                        }
+                    }
+                    datetime = new Date(datetime);
+                    var o = {
+                        "M+": datetime.getMonth() + 1, //月份
+                        "d+": datetime.getDate(), //日
+                        "h+": datetime.getHours(), //小时
+                        "m+": datetime.getMinutes(), //分
+                        "s+": datetime.getSeconds(), //秒
+                        "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度
+                        "S": datetime.getMilliseconds() //毫秒
+                    };
+                    if (/(y+)/.test(fmt))
+                        fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
+                    for (var k in o)
+                        if (new RegExp("(" + k + ")").test(fmt))
+                            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    return fmt;
+                } else {
+                    return "";
+                }
+            }
+        }
+    })
+
+    </script>
+</body>
+</html>

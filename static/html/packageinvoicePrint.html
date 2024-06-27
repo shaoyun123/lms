@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发货单打印</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <script src="../vue/js/JsBarcode.all.min.js"></script>
+    <style>
+        #app{
+            width: 900px;
+            margin: 0 auto;
+            font-family: '宋体';
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+            padding-left: 20px;
+        }
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+        }
+        .el-table{
+            font-size: 14px;
+        }
+        .el-table th{
+            text-align: center;
+        }
+        .el-table td{
+            text-align: center;
+        }
+        .el-table__header tr {
+            padding: 0;
+            line-height: 20px;
+        }
+        .el-table__header th {
+            padding: 0;
+            line-height: 20px;
+        }
+        .el-aside{
+            line-height: 25px;
+        }
+        body > .el-container {
+            margin-bottom: 20px;
+            font-family: '宋体';
+        }
+        .el-table td, .el-table th{
+            padding: 0px;
+        }
+        .el-table .cell {
+            line-height: 20px;
+            padding: 0px;
+            font-size: 12px;
+        }
+        .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+            padding: 0px;
+        }
+        table tr th,
+        table tr td {
+            border: 1px solid black;
+        }
+        .el-table thead {
+            color: #333;
+
+        }
+        .el-table__footer-wrapper tbody td, .el-table__header-wrapper tbody td {
+            background-color: #fff !important;
+        }
+        .el-table__footer-wrapper td {
+            border-top: 1px solid #000 !important;
+        }
+    </style>
+</head>
+<body>
+        <div id="app">
+            <el-main>
+                <el-header style="font-size: 32px;">发货单</el-header>
+                <el-container>
+                    <el-aside style="width: 430px;">
+                        <el-row>
+                            <el-col :span="5">
+                                <div class="grid-content bg-purple-dark">发货单：</div>
+                            </el-col>
+                            <el-col :span="16">
+                                <div class="grid-content bg-purple-dark"><svg id="barcode_invoiceNo"></svg></div>
+                            </el-col>
+                        </el-row>
+                    </el-aside>
+                    <el-aside style="width:430px;">
+                        <el-row>
+                            <el-col :span="5" >
+                                <div class="grid-content bg-purple-dark">物流公司：</div>
+                            </el-col>
+                            <el-col :span="16" style="font-size: 25px;">
+                                <div class="grid-content bg-purple-dark"><b>{{agentCompany}}</b></div>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                             <el-col :span="5">
+                                 <div class="grid-content bg-purple-dark">发货时间：</div>
+                             </el-col>
+                            <el-col :span="16">
+                                <div class="grid-content bg-purple-dark">{{createTime}}</div>
+                            </el-col>
+                        </el-row>
+                    </el-aside>
+                </el-container>
+                <el-container>
+                    <el-main style="padding: 0px;    border-right: 1px solid">
+                        <el-table :data="detailCombiList" border  style="text-align: center;" >
+                            <el-table-column prop="id1"  label="序号"  width="50"></el-table-column>
+                            <el-table-column prop="batchNo" label="包裹号" ></el-table-column>
+                            <el-table-column prop="realWeight"  label="重量（kg）"></el-table-column>
+                            <el-table-column width="5"></el-table-column>
+                            <el-table-column prop="id2"  label="序号"  width="50"></el-table-column>
+                            <el-table-column prop="batchNo1" label="包裹号" ></el-table-column>
+                            <el-table-column prop="realWeight1"  label="重量（kg）"></el-table-column>
+                        </el-table>
+
+                    </el-main>
+                </el-container>
+
+
+                <el-container >
+                    <el-aside style="width: 580px; line-height: 40px;padding: 20px;">
+                      <el-col :span="22">
+                        <div class="grid-content bg-purple-dark">总包裹：共{{totalPackageNO || 0}}个包裹号</div>
+                      </el-col>
+                      <el-col :span="22">
+                          <div class="grid-content bg-purple-dark">总重量：{{totalWeight ||0}}(kg)</div>
+                      </el-col>
+                    </el-aside>
+                    <el-aside style="width:280px; line-height: 40px;padding: 20px;">
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-dark">发货人：</div>
+                        </el-col>
+                        <el-col :span="10">
+                            <div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-dark">提货人：</div>
+                        </el-col>
+                        <el-col :span="10">
+                            <div class="grid-content bg-purple-dark" style="border-bottom: 1px solid;">&nbsp;</div>
+                        </el-col>
+                    </el-aside>
+                </el-container>
+                </el-container>
+            </el-main>
+        </div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                invoiceNo:'', //发货单
+                agentCompany:'', //物流公司
+                createTime:'', //发货时间：
+                totalWeight:'', //重量
+                totalPackageNO:'', //包裹数量
+                detailList:[], //包裹数据列表
+                detailCombiList: [] //包裹组合数据列表
+            }
+        },
+        created: function () {
+            var invoiceNo = window.location.search.split('&')[0].split('=')[1];
+            this.invoiceNo = invoiceNo
+        },
+        mounted:function(){
+            const searchStr=window.location.search;
+            // console.log("xxx",searchStr);
+            /**获取采购入库订单号*/
+            const shippingNo=searchStr.substring(searchStr.indexOf("=")+1);
+            // console.log("shippingNo",shippingNo)
+            /**根据采购入库订单号，获取入库详情，生成打印页面*/
+            function getSum(total, num) {
+              return total + num;
+            }
+        
+            this.$http.post('../../platOrderHandover/getDispatchBill.html?shippingNo='+shippingNo).then(function(res){
+                    var resData = res.body;
+                    if(resData.code=="0000"){
+                        var rdata = resData.data;
+                        let logisCompany = Array.from(new Set(rdata.map(v => v.logisCompanyName))) || [],
+                         temObj = rdata[0] || {},
+                        //  totalpackageNum = rdata.map(v => v.packageNum || 0).reduce(getSum, 0)
+                        totalpackageNum = rdata.length;
+                         totalrealWeight = rdata.map(v => v.realWeight || v.preWeight || 0).reduce(getSum, 0).toFixed(2)
+                        this.invoiceNo=temObj.shippingNo;
+                        this.agentCompany=logisCompany.join(',');
+                        this.createTime=this.format(temObj.shippingTime,'yyyy-MM-dd hh:mm:ss')
+                        this.totalWeight=(totalrealWeight*100).toFixed(2)/100;
+                        this.totalPackageNO=totalpackageNum;
+                        //循环改变取值
+                        for(let i=0; i<rdata.length; i++){
+                          let item = rdata[i];
+                          item.realWeight = item.realWeight || item.preWeight || 0;
+                          item.id1 = i+1;
+                        }
+                        //合并数据[8变4,6变3]
+                        const mergedArray = [];
+                        for (let i = 0; i < rdata.length; i+=2) {
+                            const item1 = rdata[i];
+                            const item2 = rdata[i+1];
+                            //key值映射
+                            let keyMapping = {
+                              'batchNo': 'batchNo1',
+                              'realWeight': 'realWeight1'
+                            }
+                            const newObject = {};
+                            for (const oldKey in item2) {
+                                if (keyMapping.hasOwnProperty(oldKey)) {
+                                    const newKey = keyMapping[oldKey];
+                                    newObject[newKey] = item2[oldKey];
+                                }
+                                newObject.id2 = i+2;
+                            }
+                            let connectObject = {...item1, ...newObject};
+                            mergedArray.push(connectObject);
+                        }
+                        this.detailCombiList = mergedArray;
+                        this.detailList=rdata;
+                        this.$nextTick(function(){
+                            $("#barcode_invoiceNo").JsBarcode(temObj.shippingNo,{width:1.5,height:40,margin: 3,fontSize:14,textMargin:1});
+                            window.print();
+                        });
+                    }else{
+                        alert(resData.msg);
+                    }
+            },function(res){
+                alert("打印页面加载失败");
+            });
+        },
+        methods:{
+            format(datetime, fmt){
+                if (datetime) {
+                    datetime = datetime.toString();
+                    if (parseInt(datetime) == datetime) {
+                        if (datetime.length == 10) {
+                            datetime = parseInt(datetime) * 1000;
+                        } else if (datetime.length == 13) {
+                            datetime = parseInt(datetime);
+                        }
+                    }
+                    datetime = new Date(datetime);
+                    var o = {
+                        "M+": datetime.getMonth() + 1, //月份
+                        "d+": datetime.getDate(), //日
+                        "h+": datetime.getHours(), //小时
+                        "m+": datetime.getMinutes(), //分
+                        "s+": datetime.getSeconds(), //秒
+                        "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度
+                        "S": datetime.getMilliseconds() //毫秒
+                    };
+                    if (/(y+)/.test(fmt))
+                        fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
+                    for (var k in o)
+                        if (new RegExp("(" + k + ")").test(fmt))
+                            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    return fmt;
+                } else {
+                    return "";
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

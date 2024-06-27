@@ -1,0 +1,251 @@
+@charset "utf-8";
+
+/* CSS Document */
+.uploadify-button {
+  display: inline-block;
+  background-color: rgb(0, 155, 136);
+  color: #fff;
+  white-space: nowrap;
+  text-align: center;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+/* .uploadify-button:hover{
+	background-color: #888;
+} */
+.uploadfile {
+  width: 0;
+}
+
+.uploadify-queue .uploadify-queue-item {
+  list-style-type: none;
+  margin-top: 10px;
+}
+
+.uploadbtn,
+.delfilebtn {
+  display: inline-block;
+  border: 1px solid #999;
+  line-height: 24px;
+  border-radius: 4px;
+  padding: 0 18px;
+  font-size: 12px;
+  color: #666;
+  text-decoration: none;
+}
+
+.uploadbtn {
+  display: none;
+  /*默认不显示上传按钮，非自动上传时用js控制显示*/
+}
+
+.up_filename,
+.progressnum,
+.delfilebtn,
+.uploadbtn,
+.up_percent {
+  font-size: 12px;
+  color: #666;
+  margin-left: 10px;
+}
+
+.uploadify-progress {
+  display: inline-block;
+  width: 600px;
+  height: 10px;
+  background-color: white;
+  border-radius: 20px;
+  border: 2px groove #666;
+  vertical-align: middle;
+  padding: 0;
+}
+
+.uploadify-progress-bar {
+  width: 0;
+  height: 100%;
+  border-radius: 20px;
+  background-color: #0099FF;
+}
+
+table#intable_tpl {
+  width: 100%;
+}
+
+td[colspan='7'] {
+  padding: 0;
+}
+
+table#intable_tpl>tbody>tr:first-child td {
+  border-top: none;
+}
+
+table#intable_tpl>tbody>tr:last-child td {
+  border-bottom: none;
+}
+
+table#intable_tpl>tbody>tr td {
+  border-left: none;
+  border-right: none;
+}
+
+table#intable_tpl>tbody>tr td:last-child {
+  border-right: none;
+}
+
+table#intable_tpl>tbody>tr td,
+table#producttplTable th {
+  box-sizing: border-box;
+}
+
+.layui-form-item .layui-input-inline {
+  float: left;
+  margin-right: 10px;
+}
+
+.layui-form-radio {
+  padding-right: 0
+}
+
+.layui-timeline-item {
+  position: relative;
+  padding-bottom: 3px;
+}
+
+#LAY-work-develop-producttpl .layui-table-cell {
+  height: inherit;
+}
+
+#mainPicUl>li,
+#assistPicUl>li {
+  float: left;
+  margin-left: 10px;
+}
+
+.layui-form-checkbox[lay-skin=primary] {
+  /* margin-bottom: 10px;
+        margin-left: 10px; */
+}
+
+.shopKind ul li {
+  float: left;
+  /* margin-left: 20px; */
+  padding: 15px
+}
+
+.shopKind ul li a {
+  color: #428BCA
+}
+
+.shopKind ul li a:hover {
+  background-color: #0087E0;
+  color: #fff
+}
+
+#seeLocalPicture div,
+#seeAssistPicture div {
+  float: left;
+  margin-bottom: 30px;
+}
+
+#seeLocalPicture img,
+#seeAssistPicture img {
+  width: 100px;
+  height: 100px;
+  margin-left: 20px;
+}
+
+/* 产品变种图片的样式 */
+
+#goodsList tr td .layui-upload-list div {
+  float: left;
+  margin-bottom: 30px;
+}
+
+#goodsList tr td .layui-upload-list img {
+  width: 100px;
+  height: 100px;
+  margin-left: 20px;
+}
+
+#mainPicUpload-drop li,
+#assistPicUpload-drop li {
+  float: left;
+  margin: 5px;
+}
+
+#mainPicUpload-drop li .imgDivDown.h20.taRight a,
+#assistPicUpload-drop li .imgDivDown.h20.taRight a {
+  color: #4B60A8;
+  font-size: 13px;
+}
+
+/*尺寸下的样式*/
+#size_content .layui-btn-disabled {
+  pointer-events: none;
+}
+
+/*产品变种下的样式*/
+#goodsList .kongImgDivIn {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: inline-block;
+  background-color: white;
+  border: 1px solid #cccccc;
+}
+
+#goodsList .img-kong {
+  background: url(${ctx}/static/img/kong.png) repeat-x
+}
+
+#goodsList ul li {
+  float: left;
+  margin-left: 10px;
+}
+
+#goodsList ul li a {
+  color: #4B60A8;
+  font-size: 13px;
+}
+
+#goodsListTable.layui-table img {
+  max-width: 150px;
+}
+
+.LAY-template-producttpl {
+  float: left;
+  width: 30%;
+  height: 350px;
+  border: 1px solid #ccc;
+  margin-left: 2%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 5px;
+  margin-bottom: 20px
+}
+
+.LAY-template-producttpl li {
+  padding: 5px;
+  background: #F8FAFF;
+  margin-bottom: 5px;
+  border: 1px solid #DAE2EA;
+  width: 100%;
+  box-sizing: border-box
+}
+
+.LAY-template-producttpl li a {
+  display: inline-block;
+  color: #7C9EB2;
+  width: 100%;
+}
+
+.uploadImgUL li {
+  float: left;
+  margin-right: 10px;
+}

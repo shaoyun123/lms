@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>调拨单打印</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <script src="../vue/js/JsBarcode.all.min.js"></script>
+    <style>
+        #app {
+            width: 900px;
+            margin: 0 auto;
+            font-family: '宋体';
+        }
+
+        .el-header,
+        .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+            padding-left: 20px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+        }
+
+        .el-table {
+            font-size: 14px;
+            border-collapse: collapse;
+        }
+
+        .el-table th {
+            text-align: center;
+        }
+
+        .el-table td {
+            text-align: center;
+        }
+
+        .el-table__header tr {
+            padding: 0;
+            line-height: 70px;
+        }
+
+        .el-table__header th {
+            padding: 0;
+            line-height: 40px;
+        }
+
+        .el-aside {
+            line-height: 25px;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+            font-family: '宋体';
+        }
+
+        .el-table td,
+        .el-table th {
+            padding: 0px;
+        }
+
+        .el-table .cell {
+            line-height: 35px;
+            padding: 0px;
+        }
+
+        .el-table .cell,
+        .el-table th div,
+        .el-table--border td:first-child .cell,
+        .el-table--border th:first-child .cell {
+            padding: 0px;
+        }
+
+        /* .el-table--border td, 
+        .el-table--border th, 
+        .el-table__body-wrapper 
+        .el-table--border.is-scrolling-left~.el-table__fixed,
+        table,
+        table tr th,
+        table tr td {
+            border: 1px solid black!important;
+        }  */
+        
+         .el-table--border, .el-table--group {
+            border: 1px solid #000!important;
+        }
+        
+         .el-table {
+            font-size: 14px;
+            border-collapse: collapse!important;
+        }  
+
+        .el-table--border::after, .el-table--group::after, .el-table::before {
+            background-color: #000
+        }
+        .el-table--border td, 
+        .el-table--border th, 
+        .el-table__body-wrapper 
+        .el-table--border.is-scrolling-left~.el-table__fixed {
+            border-right: 1px solid #000!important;
+        }
+        .el-table td, 
+        .el-table th.is-leaf {
+            border-bottom: 1px solid #000!important;
+        } 
+        .el-table thead {
+            color: #333;
+        } 
+        .page_break {
+            page-break-after:always; 
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <el-container>
+
+        <el-container>
+            <el-main style="padding: 0px;" class="page_break">
+                <div class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition"
+                     style="text-align: center;">
+                    <div class="el-table__body-wrapper is-scrolling-none">
+                        <table cellspacing="0" cellpadding="0" class="el-table__body"
+                               style="width: 100%;">
+                            <tr class="el-table__row">
+                                <td rowspan="3" colspan="1" width="80">
+                                    <div class="cell">调拨单号</div>
+                                </td>
+                                <td rowspan="1" colspan="7" width="265">
+                                    <div class="cell">{{tranOrderId}}</div>
+                                </td>
+
+                            </tr>
+                            <tr class="el-table__row">
+                                <td rowspan="2" colspan="3" width="500">
+                                    <div class="cell">
+                                        <svg id="tranOrderId"></svg>
+                                    </div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="80">
+                                    <div class="cell">调出仓库</div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="60">
+                                    <div class="cell">{{outWareHouseName}}</div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="60">
+                                    <div class="cell">调入仓库</div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="80">
+                                    <div class="cell">{{intoWareHouseName}}</div>
+                                </td>
+                            </tr>
+                            <tr class="el-table__row">
+                                <td rowspan="1" colspan="1" width="80">
+                                    <div class="cell">快递方式</div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="60">
+                                    <div class="cell">{{tranType}}</div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="80">
+                                    <div class="cell">快递单号</div>
+                                </td>
+                                <td rowspan="1" colspan="1" width="80">
+                                    <div class="cell">{{deliveryNumber}}</div>
+                                </td>
+                            </tr>
+                            <tr class="el-table__row">
+                                <td rowspan="1" colspan="1" width="80">
+                                    <div class="cell">备注</div>
+                                </td>
+                                <td rowspan="1" colspan="7" width="265">
+                                    <div class="cell">{{remark}}</div>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <el-table :data="tableData" border style="text-align: center;">
+                    <el-table-column label="图片" width="80" height="40">
+                        <template scope="scope">
+                            <img :src="scope.row.image" width="70px;" height="60px;" style="padding-top: 8px;">
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="title" label="商品名称" ></el-table-column>
+                    <el-table-column prop="prodSSku" label="商品sku" width="120"></el-table-column>
+                    <el-table-column prop="outLocationCode" label="出库库位" width="120"></el-table-column>
+                    <el-table-column prop="outTaxPer" label="出库单价" width="140"></el-table-column>
+                    <el-table-column prop="outNumber" width="100" label="出库数量"></el-table-column>
+                </el-table>
+            </el-main>
+        </el-container>
+
+    </el-container>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData: [],
+                tranOrderId: '',
+                tranType: '',
+                outWareHouseName: '',
+                intoWareHouseName: '',
+                deliveryNumber: '',
+                remark: ''
+            }
+        },
+        created: function () {
+
+        },
+        mounted: function () {
+            const searchStr = window.location.search;
+            const params = searchStr.substring(searchStr.indexOf("?") + 1);
+            const splits = params.split("&");
+            /**获取调拨单单号*/
+            const tranOrderId = splits[0].substring(splits[0].indexOf("=") + 1);
+            const status = splits[1].substring(splits[1].indexOf("=") + 1);
+            /**根据调拨单单号，获取调拨单详情，生成打印页面*/
+            this.$http.post('../../tranOrder/printPreview.html', JSON.stringify({
+                status: status,
+                tranOrderIds: tranOrderId
+            }), {
+                emulateJSON: true
+            }).then(function (res) {
+                var resData = res.body;
+                console.log(resData)
+                if (resData.code == "0000") {
+                    var rdata = resData.data[0];
+                    this.tableData = rdata.detailList;
+                    this.tranOrderId = rdata.tranOrderId;
+                    this.tranType = rdata.tranType;
+                    this.outWareHouseName = rdata.outWareHouseName;
+                    this.intoWareHouseName = rdata.intoWareHouseName;
+                    this.deliveryNumber = rdata.deliveryNumber;
+                    this.remark = rdata.remark;
+                    this.$nextTick(function () {
+                        $("#tranOrderId").JsBarcode(rdata.tranOrderId, {
+                            width: 1.5,
+                            height: 40,
+                            margin: 3,
+                            fontSize: 14,
+                            textMargin: 1
+                        });
+                        //window.print();
+                    });
+                } else {
+                    alert(resData.msg);
+                }
+            }, function (res) {
+                alert("调拨单页面加载失败");
+            });
+        },
+        methods: {}
+    });
+</script>
+</body>
+
+</html>

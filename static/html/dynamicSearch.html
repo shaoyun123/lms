@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态查询</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <script src="../vue/js/axios.min.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <script src="../util/exportExcel.js"></script>
+<!--    <script src="../util/util.js"></script>-->
+</head>
+<style>
+    #app {
+        width: 100%;
+        height: 100%;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+    .el-table {
+        margin-top: 20px;
+    }
+    .el-input {
+        width: 200px;
+    }
+    .form {
+        height: 100px;
+        position: fixed;
+        top: 30px;
+        overflow-y: auto;
+    }
+    .table {
+        margin-top: 100px;
+    }
+    .dynamicItemContent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+    }
+
+    .expand_text {
+       display: flex;
+    }
+    .expand_text_content {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.5;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: justify;
+      position: relative;
+    } 
+    .expand_text_content::before {
+        content: '';
+        float: right;
+        width: 0;
+        height: calc(100% - 18px);
+      }
+      .expand_text_content::after {
+        content: '';
+        width: 900px;
+        height: 900px;
+        position: absolute;
+        margin-left: -30px;
+        box-shadow: inset -870px -880px 0 0 #fff;
+      }
+      .expand_text_btn {
+        float: right;
+        clear: both;
+        padding: 0;
+    }
+    .expand_text_btn::before {
+      content: '...';
+      position: absolute;
+      left: -10px;
+      transform: translateX(-100%);
+    }
+    .expand_text_btn::after {
+      content: '展开';
+    }
+    .expand_text_content_more .expand_text_btn::after {
+        content: '收起';
+      }
+    .expand_text_content_more::after {
+        visibility: hidden;
+      }
+
+</style>
+<body>
+    <div id="app">
+        <el-form :inline="true" class="form">
+            <el-form-item v-for="item in statisticReportSearchParams" :key="item.id" :label="item.alias" size="small">
+                <el-select v-model="item.paramRelation">
+                    <el-option :value="0" label="="></el-option>
+                    <el-option :value="1" label=">"></el-option>
+                    <el-option :value="2" label="<"></el-option>
+                    <el-option :value="3" label=">="></el-option>
+                    <el-option :value="4" label="<="></el-option>
+                </el-select>
+                <el-input v-if="item.type !== 3" v-model="item.paramValue"></el-input>
+                <el-date-picker v-if="item.type === 3" v-model="item.paramValue"
+                 type="datetime" placeholder="选择时间" value-format="yyyy-MM-dd HH:mm:ss">></el-date-picker>
+            </el-form-item>
+
+            <el-button type="primary" size="small" @click="handleQuery" v-loading.fullscreen.lock="loading">查询</el-button>
+            <el-button type="primary" size="small" @click="handleExport">导出</el-button>
+        </el-form>
+
+        <el-table :data="tableList" class="table" v-if="extraList.length > 0" :height="getHeight()" @selection-change="handleSelectionChange" border>
+            <el-table-column type="selection" width="100"></el-table-column>
+            <el-table-column v-for="(item, index) in extraList" :key="index" :prop="item" :label="item">
+                <template #default="scope">
+                    <div class="expand_text">
+                        <div :class="[
+                            'expand_text_content',
+                            scope.row['lineClamp' + index] !== defaultLine ? 'expand_text_content_more' : ''
+                        ]"
+                        :style="{ '-webkit-line-clamp': scope.row['lineClamp' + index]}">
+                            <el-button type="text" class="expand_text_btn" @click="handleClick(scope.row, 'lineClamp' + index)"></el-button>
+                            {{ scope.row[item] }}
+                        </div>
+                    </div>
+                    <!-- <div v-else>{{ scope.row[item] }}</div> -->
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <div class="pagination" v-if="extraList.length > 0">
+            <el-pagination
+                :currentPage="page"
+                :page-size="limit"
+                layout="total, prev, pager, next"
+                :total="total"
+                :small="true"
+                @current-change="handleCurrentChange"
+            />
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                id: '',
+                statisticReportSearchParams: [],
+                page: 1,
+                limit: 100,
+                total: 0,
+                tableList: [],
+                selectList: [],
+                extraList: [],
+                reportInfo: {},
+                title: '',
+                loading: false,
+                defaultLine: 4,
+                lineClamp: -1,
+                columnIndex: -1,
+                lineIndex: -1,
+                indexList: []
+            }
+        },
+        created() {
+            const searchStr=window.location.search;
+
+            const obj = this.getUrlParams(searchStr)
+            this.id = obj.id;
+            this.title = decodeURI(obj.name);
+            document.title = this.title;
+
+            this.lineClamp = this.defaultLine;
+        },
+        mounted: function () {
+
+            var ctx = window.location.origin; //主机
+            axios.get(`${ctx}/lms/statisticReport/getConfigDetails/${this.id}`).then(res => {
+                var data = res.data.data;
+                this.reportInfo = data;
+                this.statisticReportSearchParams = data.statisticReportSearchParams || [];
+                this.title = data.name;
+            }).catch(err=> {
+                console.log(err)
+            })
+
+        },
+
+        methods: {
+            handleClick(rowIndex, key){
+                rowIndex[key] === this.defaultLine ? (rowIndex[key] = 999) : (rowIndex[key] = this.defaultLine);
+
+            },
+            getUrlParams(url) {
+                // 通过 ? 分割获取后面的参数字符串
+                let urlStr = url.split('?')[1]
+                let obj = {};
+                let paramsArr = urlStr.split('&')
+                for(let i = 0,len = paramsArr.length; i < len; i++){
+                    let arr = paramsArr[i].split('=')
+                    obj[arr[0]] = arr[1];
+                }
+                return obj
+            },
+            handleQuery() {
+                this.loading = true;
+                let ctx = window.location.origin;
+                let formData = new FormData();
+                formData.append('page', this.page);
+                formData.append('limit', this.limit);
+                formData.append("configId", this.id);
+                formData.append("paramListJson", JSON.stringify(this.setSearchParams()));
+                // formData.append('lmsAppUserName', 'admin')
+                let startTime = new Date().getTime();
+                axios.post(`${ctx}/lms/statisticReport/dynamicSearch`, formData).then(res => {
+                    if (res.data.code === '0000') {
+                        this.tableList = res.data.data || []
+                        this.tableList.forEach(v=>{
+                            res.data.extra.forEach((_,index)=>{
+                                v['lineClamp'+index] = 4
+                            })
+                        })
+                        this.extraList = res.data.extra || []
+                        let currentTime = new Date().getTime();
+                        // this.total = this.tableList?.length
+                        if ((currentTime - startTime) / 1000 > 10) {
+                            this.total = 999999
+                        } else {
+                            this.total = res.data.count
+                        }
+                    } else {
+                        this.$alert(res.msg || '操作失败', '提示', {
+                            confirmButtonText: '确定'
+                        });
+                    }
+                    this.loading = false
+                }).catch(err => {
+                    console.log(err)
+                    this.loading = false
+                })
+            },
+
+            setSearchParams() {
+                let paramList = []
+                this.statisticReportSearchParams.forEach((item) =>{
+                    let obj = {
+                        param: '',
+                        type: '',
+                        alias: '',
+                        paramRelation: '',
+                        paramValue: ''
+                    }
+                    obj.param = item.param
+                    obj.type = item.type
+                    obj.alias = item.alias
+                    obj.paramRelation = item.paramRelation
+                    obj.paramValue = item.paramValue
+                    paramList.push(obj)
+                })
+                return paramList
+            },
+
+            // 导出
+            handleExport() {
+                if (this.tableList.length === 0) {
+                    return this.$message({
+                        message: '没有可导出的数据！'
+                    })
+                }
+                // 如果有选中数据，仅导出选中数据 通过js导出
+                if (this.selectList.length > 0) {
+                    let col = []
+                    for (let i = 0; i < this.extraList.length; ++i) {
+                        col.push({
+                            title: this.extraList[i],
+                            field: this.extraList[i]
+                        })
+                    }
+                    this.reportInfo.col = col
+                    let exportCol = this.reportInfo.col.slice(0)
+                    this.$confirm(`确认导出这${this.selectList.length}条信息吗?`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        tableToExcel(this.selectList, exportCol, this.reportInfo.name + '.xls')
+                    }).catch(() => {})
+                } else {
+                    // 如果未选中数据，根据查询条件进行导出
+                    let searchParam = this.setSearchParams()
+                    let Adata = {
+                        configId: this.reportInfo.id,
+                        paramListJson: JSON.stringify(searchParam)
+                    }
+                    let data = {}
+                    data.searchParam = JSON.stringify(Adata)
+                    let tip = '确认导出当前搜索条件下信息?'
+                    this.$confirm(tip, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        let ctx = window.location.origin;
+                        this.submitForm(data, ctx + '/lms/statisticReport/dynamicExport', '_blank')
+                    }).catch(() => {})
+                }
+            },
+            handleSelectionChange(val) {
+                this.selectList = val;
+            },
+
+            submitForm(data, url, target) {
+                var form = $('<form></form>')
+                form.attr('action', url)
+                form.attr('method', 'post')
+                if (target) {
+                    form.attr('target', target)
+                } else {
+                    form.attr('target', '_blank')
+                }
+                for (var key in data) {
+                    var temp = $("<input type='hidden' name='" + key + "' value='" + data[key] + "'/>")
+                    form.append(temp)
+                }
+                form.appendTo('body')
+                form.css('display', 'none')
+                form.submit()
+            },
+
+            handleCurrentChange(val) {
+                this.page = val
+                this.handleQuery()
+            },
+            getHeight() {
+                const clientHeight =
+                    window.innerHeight ||
+                    document.documentElement.clientHeight ||
+                    document.body.clientHeight ||
+                    937;
+                return clientHeight - 245;
+            }
+        }
+    })
+</script>
+<style scoped>
+    #app {
+        box-sizing: border-box;
+    }
+    .pagination {
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+</style>
+</html>

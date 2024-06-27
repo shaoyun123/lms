@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>通用表格打印</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <style>
+        #app{
+            width: 900px;
+            margin: 0 auto;
+            font-family: '宋体';
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+            padding-left: 20px;
+        }
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+        }
+        .el-table{
+            font-size: 14px;
+        }
+        .el-table th{
+            text-align: center;
+        }
+        .el-table td{
+            text-align: center;
+        }
+        .el-table__header tr {
+            padding: 0;
+            line-height: 70px;
+        }
+        .el-table__header th {
+            padding: 0;
+            line-height: 40px;
+        }
+        .el-aside{
+            line-height: 25px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+            font-family: '宋体';
+        }
+        .el-table td, .el-table th{
+            padding: 0px;
+        }
+        .el-table .cell {
+            line-height: 35px;
+            padding: 0px;
+        }
+        .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+            padding: 0px;
+        }
+        table tr th,
+        table tr td {
+            border: 1px solid black
+        }
+        .el-table thead {
+            color: #333;
+
+        }
+    </style>
+</head>
+<body>
+        <div id="app" >
+            <el-container >
+                <el-header style="font-size: 32px;" v-text="title"></el-header>
+                <el-container>
+                    <el-main style="padding: 0px;    border-right: 1px solid">
+                        <el-table
+                                :data="pageData"
+                                border
+                                style="width: 100%">
+                            <el-table-column
+                                    v-for="(item, index) in tableColumns"
+                                    :prop="item.field"
+                                    :label="item.title"
+                                    :width='item.width'
+                                    sortable
+
+                            >
+                                <el-table-column v-if='item.children||item.children.length>0'
+                                                 v-for="(item1,index1) in item.children"
+                                :label="item1.title" :width='item1.width'>
+                                    <template scope="scope">
+                                        <table style="width: 100%;padding: 5px 0">
+                                            <tr v-for="item2 in scope.row[item.field]">
+                                                <td>
+                                                    <div style="word-wrap:break-word" >{{item2[item1.field]}}</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--<div>{{scope.row[item.field][0][item1.field]}}</div>-->
+                                    </template>
+                                </el-table-column>
+                            </el-table-column>
+                        </el-table>
+
+                        <!--<el-table :data="tabledata01" :span-method="tableSpanMethod" max-height="420">-->
+                            <!--<el-table-column v-for='item in tableConfig' :label="item.label" :prop='item.prop' :width='item.width' :key="item.id">-->
+                                <!--<el-table-column v-if='item.children||item.children.length>0' v-for="item1 in item.children"-->
+                                                 <!--:label="item1.label" :prop='item1.prop' :width='item1.width' :key="item1.id">-->
+                                    <!--<el-table-column v-if='item1.children||item1.children.length>0' v-for="item2 in item1.children"-->
+                                                     <!--:label="item2.label" :prop='item2.prop' :width='item2.width' :key="item2.id">-->
+                                    <!--</el-table-column>-->
+                                <!--</el-table-column>-->
+                            <!--</el-table-column>-->
+                        <!--</el-table>-->
+                    </el-main>
+                </el-container>
+            </el-container>
+        </div>
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                title: '',
+                tableColumns: [],
+                pageData: []
+
+            }
+        },
+        created: function () {
+            const searchStr=window.location.search;
+            /** 获取表头以及 数据的缓存key*/
+            let dataKey = searchStr.split('=')[1]
+
+            // 获取缓存中的json数据
+            let colNameArr = sessionStorage.getItem(dataKey)
+            let tableData = JSON.parse(colNameArr)
+            this.title = tableData.title
+            this.tableColumns = tableData.tableColumns
+            this.pageData = tableData.pageData
+            console.log(this.tableColumns)
+            console.log(this.pageData)
+        },
+        mounted:function(){
+            window.setTimeout(function () {
+//                window.print()
+            },300)
+        },
+        methods:{
+            test: function (dd) {
+                console.log(dd)
+                return dd
+            }
+        }
+    });
+</script>
+</body>
+</html>

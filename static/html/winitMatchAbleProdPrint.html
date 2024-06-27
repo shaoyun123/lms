@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>万邑通库存检查打印</title>
+    <script src="../jquery.js"></script>
+    <script src="../vue/js/vue@2.6.10.js"></script>
+    <link rel="stylesheet" href="../vue/css/element-ui@2.13.0.css">
+    <script src="../vue/js/element-ui@2.6.2.js"></script>
+    <script src="../vue/js/vue-resource.min.js"></script>
+    <style>
+        #app{
+            width: 900px;
+            margin: 0 auto;
+            font-family: '宋体';
+        }
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+            padding-left: 20px;
+        }
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+        }
+        .el-table{
+            font-size: 14px;
+        }
+        .el-table th{
+            text-align: center;
+        }
+        .el-table td{
+            text-align: center;
+        }
+        .el-table__header tr {
+            padding: 0;
+            line-height: 70px;
+        }
+        .el-table__header th {
+            padding: 0;
+            line-height: 40px;
+        }
+        .el-aside{
+            line-height: 25px;
+        }
+        body > .el-container {
+            margin-bottom: 40px;
+            font-family: '宋体';
+        }
+        .el-table td, .el-table th{
+            padding: 0px;
+        }
+        .el-table .cell {
+            line-height: 35px;
+            padding: 0px;
+        }
+        .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+            padding: 0px;
+        }
+        table tr th,
+        table tr td {
+            border: 1px solid black
+        }
+        .el-table thead {
+            color: #333;
+
+        }
+    </style>
+</head>
+<body>
+        <div id="app" >
+            <el-container >
+                <el-header style="font-size: 32px;">可配货商品</el-header>
+                <el-container>
+                    <el-main style="padding: 0px;    border-right: 1px solid">
+                        <el-table :data="tableData" border style="text-align: center;">
+                            <el-table-column prop="sSku" label="商品sku"></el-table-column>
+                            <el-table-column label="库位" >
+                                <template scope="scope">
+                                    <div>{{scope.row.whWarehouseProdLocation ? scope.row.whWarehouseProdLocation.locationCode : ''}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="可用数量">
+                                <template scope="scope">
+                                    <div>{{scope.row.whStock.currentStock - scope.row.whStock.reservationStock}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="planAmount" label="待配货数量"></el-table-column>
+                        </el-table>
+                    </el-main>
+                </el-container>
+            </el-container>
+        </div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData:[],
+                prodSIdListStr: []
+            }
+        },
+        created: function () {
+            const searchStr=window.location.search;
+            let params = searchStr.split('&');
+            this.prodSIdListStr = params[0].split('=')[1];
+        },
+        mounted:function(){
+            var self = this
+            /**根据采购入库订单号，获取入库详情，生成打印页面*/
+            let formData = new FormData();
+            formData.append("prodSIdListStr", this.prodSIdListStr);
+            formData.append("orderBy", '(t5.current_stock - t5.reservation_stock) desc');
+
+            this.$http.post('../../winitMatchChannel/searchMatchAbleProd.html', formData, {headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}).then(
+                function(resObj){
+                    var res = resObj.body
+                    if(res.code=="0000"){
+                        self.tableData = res.data
+                        window.setTimeout(function () {
+                            window.print()
+                        },300)
+                    }else{
+                        alert(res.msg);
+                    }
+                },function(res){
+                    alert("打印页面加载失败");
+                });
+        },
+        methods:{
+
+        }
+    });
+</script>
+</body>
+</html>

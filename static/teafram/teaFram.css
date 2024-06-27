@@ -1,0 +1,9 @@
+.tea_page_bottom {
+    position: fixed;
+    background: #fff;
+    width: 100%;
+    z-index: 99999;
+    bottom: 0;
+    left: 100px;
+    border-top: 1px solid #ccc;
+}

@@ -1,0 +1,177 @@
+.webuploader-container {
+    position: relative;
+}
+
+.webuploader-element-invisible {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+.webuploader-pick {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    background: #00b7ee;
+    padding: 5px 8px;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.webuploader-pick-hover {
+    background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+
+/* 图片渲染以后的元素的样式 */
+
+
+
+/* 产品变种颜色的样式 */
+
+#addVariantContainer {
+    padding: 50px 20px 0 20px;
+}
+
+#addVariantContainer .variantStyle{
+    margin-top: 50px;
+}
+#addVariantContainer .variantColor,
+#addVariantContainer .variantStyle,
+#addVariantContainer .variantSize {
+    position: relative;
+    border: 1px solid #96c1d2;
+    border-radius: 3px;
+    height: auto;
+}
+#addVariantContainer .variantStyleBody{
+    clear: both;
+    margin: 20px;
+}
+#addVariantContainer .variantColor {
+    margin-bottom: 5%;
+}
+#addVariantContainer .variantSize {
+    padding-bottom: 10px;
+}
+#addVariantContainer .variantColor .colorErrorMsg {
+    padding: 0 0 10px 10px;
+}
+
+#addVariantContainer .variantColor .variantColorSel {
+    margin-bottom: 20px;
+}
+
+#addVariantContainer .variantColor .variantColorSel ul li {
+    float: left;
+    padding: 20px 10px 5px 5px;
+}
+
+#addVariantContainer .variantColor .variantColorSel ul li span {
+    border: 1px solid #e8e8e8;
+    padding: 5px 15px;
+}
+#addVariantContainer .variantStyle .variantStyleInput,
+#addVariantContainer .variantColor .variantColorInput {
+    padding: 5px
+}
+.variantStyleInput{
+    clear: both;
+}
+#addVariantContainer .variantStyle .variantStyleInput input,
+#addVariantContainer .variantColor .variantColorInput input {
+    display: inline-block;
+    width: 40%;
+    line-height: 1.5;
+    padding: 4px 7px;
+    border: 1px solid #dddee1;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: text;
+}
+#addVariantContainer .variantStyle .variantStyleInput input:focus,
+#addVariantContainer .variantColor .variantColorInput input:focus {
+    outline: none;
+    border: 1px solid #57a3f3;
+}
+#addVariantContainer .variantStyle .variantStyleInput .variantColorBtn
+#addVariantContainer .variantColor .variantColorInput .variantColorBtn {
+    margin: 0 5px;
+    border-radius: 6px;
+}
+
+#addVariantContainer .variantColor .variantColorInput b {
+    padding: 3px 7px;
+    color: #fff;
+    background-color: #009999
+}
+
+#addVariantContainer .variantColor .variantColorInput a {
+    color: #429ad9
+}
+
+#addVariantContainer .variantColor .variantColorTitle,
+#addVariantContainer .variantStyle .variantStyleTitle,
+#addVariantContainer .variantSize .variantSizeTitle {
+    background-color: #96c1d2;
+    color: #fff;
+    width: 60px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 3px;
+    position: absolute;
+    top: -30px;
+    left: 0px;
+}
+
+/* 产品变种尺寸的样式 */
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyHeader ul {
+    margin-top:20px;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyHeader ul li {
+       float: left;
+       margin: 0 15px 15px 15px;
+       padding: 5px;
+       width: 100px;
+       border-radius: 15px;
+       text-align: center;   
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyHeader ul li a {
+    color:#428bca;
+    font-size: 14px;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyHeader ul li:hover {
+    background-color:#0087e0 !important;
+    cursor: pointer;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyHeader ul li:hover a{
+    color: #fff !important;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyBody .variantSizeAdd {
+    padding: 0 30px;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyBody .variantSizeAdd .layui-table td {
+    font-size: 12px;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyBody .layui-col-xs12 input {
+    display: inline-block;
+    width: 40%;
+    line-height: 1.5;
+    padding: 4px 7px;
+    border: 1px solid #dddee1;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: text;
+}
+#addVariantContainer .variantSize .variantSizeBody .variantSizeBodyBody .layui-col-xs12 input:focus {
+    outline: none;
+    border: 1px solid #57a3f3;
+}
